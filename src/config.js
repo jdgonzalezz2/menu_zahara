@@ -28,6 +28,15 @@ export const SHEET_ID = "";
 export const SHEET_HOJA = "";
 
 /**
+ * gid de la pestaña: el número que aparece al final de la URL del Sheet
+ *   .../edit?gid=1450287302#gid=1450287302
+ *                ^^^^^^^^^^
+ * Es la forma MÁS robusta de apuntar a una pestaña: no cambia aunque la
+ * renombren o la muevan de posición. Si está puesto, manda sobre SHEET_HOJA.
+ */
+export const SHEET_GID = "1450287302";
+
+/**
  * Cuánto espera la carta, ya abierta en el celular del cliente, a que Google
  * le responda con los precios frescos antes de rendirse y quedarse con los
  * datos horneados. Corto a propósito: el cliente nunca debe esperar.

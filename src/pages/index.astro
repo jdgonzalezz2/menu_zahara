@@ -19,7 +19,7 @@ import Portada from "../components/Portada.astro";
 import Seccion from "../components/Seccion.astro";
 import Contraportada from "../components/Contraportada.astro";
 
-import { SHEET_ID, SHEET_HOJA, NEGOCIO, TIMEOUT_EN_VIVO } from "../config.js";
+import { SHEET_ID, SHEET_HOJA, SHEET_GID, NEGOCIO, TIMEOUT_EN_VIVO } from "../config.js";
 import { traerMenu, urlDelSheet } from "../lib/sheet.js";
 import respaldo from "../data/menu-respaldo.json";
 
@@ -29,7 +29,7 @@ let origen = "datos de ejemplo (no hay SHEET_ID configurado)";
 if (SHEET_ID) {
   try {
     // En el build sí podemos esperar: nadie está mirando la pantalla.
-    menu = await traerMenu(SHEET_ID, SHEET_HOJA, { timeout: 15000 });
+    menu = await traerMenu(SHEET_ID, SHEET_HOJA, { timeout: 15000, gid: SHEET_GID });
     origen = `Google Sheet (${menu.paginas.length} secciones)`;
   } catch (error) {
     // Decisión a propósito: si hay Sheet configurado pero no se pudo leer,
@@ -60,7 +60,7 @@ const total = nombresDePagina.length;
 // Lo que necesita el script del cliente para el refresco en vivo.
 // Si no hay Sheet configurado va en null y el refresco ni se intenta.
 const configEnVivo = SHEET_ID
-  ? { url: urlDelSheet(SHEET_ID, SHEET_HOJA), timeout: TIMEOUT_EN_VIVO }
+  ? { url: urlDelSheet(SHEET_ID, SHEET_HOJA, SHEET_GID), timeout: TIMEOUT_EN_VIVO }
   : null;
 ---
 

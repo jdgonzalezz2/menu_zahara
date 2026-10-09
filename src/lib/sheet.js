@@ -21,18 +21,26 @@
 /**
  * Arma la URL del Sheet en formato CSV.
  *
- * Si `hoja` viene vacía, no se manda el parámetro y Google usa la PRIMERA
- * pestaña. Es a propósito: así no importa cómo se llame la pestaña y nos
- * ahorramos el error más tonto y más común de todo este montaje.
+ * Para elegir la pestaña hay tres caminos, de más a menos robusto:
+ *
+ *   1. `gid`  — el número que sale en la URL del Sheet. Es el mejor: NO
+ *               cambia aunque renombren la pestaña o muevan su orden.
+ *   2. `hoja` — el nombre de la pestaña. Se rompe si la renombran.
+ *   3. nada   — Google usa la PRIMERA pestaña. Suficiente mientras haya una.
  */
-export function urlDelSheet(sheetId, hoja) {
+export function urlDelSheet(sheetId, hoja, gid) {
   const base =
     "https://docs.google.com/spreadsheets/d/" +
     encodeURIComponent(sheetId) +
     "/gviz/tq?tqx=out:csv";
 
+  const numero = String(gid ?? "").trim();
+  if (numero) return base + "&gid=" + encodeURIComponent(numero);
+
   const nombre = String(hoja ?? "").trim();
-  return nombre ? base + "&sheet=" + encodeURIComponent(nombre) : base;
+  if (nombre) return base + "&sheet=" + encodeURIComponent(nombre);
+
+  return base;
 }
 
 /* --------------------------------------------------------------------------
@@ -176,7 +184,7 @@ export function filasAMenu(filas) {
  * qué hacer (en el build fallamos fuerte; en el navegador, en silencio).
  */
 export async function traerMenu(sheetId, hoja, opciones = {}) {
-  const { timeout = 10000, fetchImpl = fetch } = opciones;
+  const { timeout = 10000, fetchImpl = fetch, gid = "" } = opciones;
 
   if (!sheetId) throw new Error("No hay SHEET_ID configurado");
 
@@ -184,7 +192,7 @@ export async function traerMenu(sheetId, hoja, opciones = {}) {
   const reloj = setTimeout(() => control.abort(), timeout);
 
   try {
-    const res = await fetchImpl(urlDelSheet(sheetId, hoja), {
+    const res = await fetchImpl(urlDelSheet(sheetId, hoja, gid), {
       signal: control.signal,
       // Que no nos devuelvan una copia vieja de la caché
       cache: "no-store",

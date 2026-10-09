@@ -74,6 +74,9 @@ ok(!urlDelSheet('ABC123', '').includes('&sheet='), 'pestaña vacía -> primera p
 ok(!urlDelSheet('ABC123', '   ').includes('&sheet='), 'pestaña en blanco -> primera pestaña');
 ok(!urlDelSheet('ABC123').includes('&sheet='), 'sin pestaña -> primera pestaña');
 ok(urlDelSheet('ABC123', 'plantilla-carta').includes('&sheet=plantilla-carta'), 'nombre con guión');
+ok(urlDelSheet('ABC123', '', '1450287302').includes('&gid=1450287302'), 'gid');
+ok(urlDelSheet('ABC123', 'Carta', '999').includes('&gid=999'), 'el gid manda sobre el nombre');
+ok(!urlDelSheet('ABC123', 'Carta', '999').includes('&sheet='), 'con gid no se manda sheet');
 
 console.log(fallos ? `\n${fallos} FALLOS` : '\n*** TODAS LAS PRUEBAS PASAN ***');
 process.exit(fallos ? 1 : 0);
