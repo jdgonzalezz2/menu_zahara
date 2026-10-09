@@ -14,9 +14,9 @@
 
 ## 📍 Estado actual (al 9 de octubre de 2026)
 
-**Dónde estamos:** **v2 construida en Astro y subida a GitHub.** Carta tipo
-revista de 6 páginas, lista para leer los productos de un Google Sheet.
-Pesa 7,1 KB gzip.
+**Dónde estamos:** 🟢 **La carta está EN VIVO y conectada al Google Sheet.**
+https://jdgonzalezz2.github.io/menu_zahara/ — 6 páginas, 22 productos que
+salen de la hoja del dueño, 7,1 KB gzip, servida desde Bogotá en ~145 ms.
 
 **Qué funciona hoy**
 
@@ -29,16 +29,13 @@ Pesa 7,1 KB gzip.
 
 **Qué NO funciona todavía**
 
-- 🔴 **El QR no sirve aún.** Apunta a `https://jdgonzalezz2.github.io/menu_zahara/`,
-  una URL que todavía no existe porque falta activar GitHub Pages.
-- 🔴 **El repositorio está privado.** GitHub Pages en cuenta gratis **solo
-  publica repos públicos**. Hay que hacerlo público (o pagar Pro). Esto
-  bloquea todo lo demás.
-- 🟡 **Falta crear el Google Sheet** y pegar su ID en `src/config.js`.
-  Mientras tanto la carta usa `src/data/menu-respaldo.json`.
-- 🟡 El **refresco en vivo** está implementado pero **no probado contra un
-  Sheet real**. Si falla, no rompe nada: queda lo horneado en el build.
-- 🟡 Los productos, los precios y el nombre son **de ejemplo**.
+- 🟡 **El QR no se ha probado con celulares reales.** La URL ya existe y
+  responde, pero hay que escanearlo de verdad antes de mandar a imprimir.
+- 🟡 Los productos, los precios y el nombre **siguen siendo de ejemplo**
+  (ahora viven en el Sheet, que es lo importante).
+- 🟡 **Falta confirmar el nombre real.** El repo y el Sheet dicen *Zahara*,
+  pero la carta sigue diciendo "Panadería El Horno".
+- 🟡 Falta el salto visual: GSAP, page curl con WebGL, micro-interacciones.
 
 ---
 
@@ -188,9 +185,49 @@ motivo**, no la borres.
 | A | ¿Stack de la v2? | ✅ **Astro** (sesión 3). |
 | B | ¿Fuente de datos editable? | ✅ **Híbrido**: Sheet horneado en el build + refresco en vivo (sesión 3). |
 | C | ¿GitHub Pages o Cloudflare Pages? | 🟡 GitHub Pages por ahora. Revisar si hace falta repo privado o funciones de servidor. |
-| D | ¿El repo se hace público? | 🔴 **Bloquea el lanzamiento.** Sin esto no hay Pages gratis. |
-| E | ¿La panadería se llama **Zahara**? | El repo se llama `menu_zahara` pero la carta dice "Panadería El Horno" (nombre de muestra). |
+| D | ¿El repo se hace público? | ✅ Hecho (sesión 4). Pages activo con *Source: GitHub Actions*. |
+| E | ¿La panadería se llama **Zahara**? | 🟡 **Sin confirmar.** El repo y el Sheet dicen Zahara; la carta dice "El Horno". Es una línea en `src/config.js`. |
 | F | ¿Se construye un panel propio para marcar agotados? | Fase 3. Un Sheet en el celular funciona, pero botones grandes serían mejor. |
+
+---
+
+### Sesión 4 — 9 de octubre de 2026 — *En vivo y conectada al Sheet*
+
+Julián hizo el repo público, activó Pages con *Source: GitHub Actions* y creó
+el Google Sheet.
+
+**Verificado contra la hoja real** (ID `1GRbr40y…UIUI`, gid `1450287302`):
+
+| Qué | Resultado |
+|---|---|
+| Lectura del Sheet | HTTP 200, 1475 B, 0,33 s |
+| CORS desde GitHub Pages | ✅ `Access-Control-Allow-Origin` correcto |
+| CORS desde localhost | ✅ también (refleja el origen que llegue) |
+| Parseo | 4 secciones, 22 productos, 2 agotados y 2 nuevos |
+| Build | `Origen de los datos: Google Sheet (4 secciones)` |
+| Sitio en vivo | 200, 22 productos, ~145 ms desde Bogotá |
+
+**Prueba de verdad del refresco en vivo.** No bastaba con ver que no fallara,
+había que ver que *corrigiera*. Se adulteraron dos precios en el HTML ya
+construido ($ 9.999 y $ 1.111), se sirvió esa versión y se abrió en un Chrome
+real: **el navegador los corrigió solo a $ 2.500 y $ 2.000** leyendo del
+Sheet. El esquema híbrido queda validado de punta a punta.
+
+**Dos trampas que costaron un rato y conviene recordar:**
+
+1. La pestaña del Sheet se llamaba `plantilla-carta`, no `Carta`. Se arregló
+   de raíz: ahora se puede apuntar por **gid** (el número de la URL), que no
+   cambia aunque renombren la pestaña. Si no hay gid ni nombre, se usa la
+   primera.
+2. `Intl.NumberFormat` separa el `$` del número con un **espacio duro
+   (U+00A0)**, no un espacio normal. Buscar `"$ 2.500"` con un espacio
+   corriente no encuentra nada. Si alguna vez hay que hacer grep o replace
+   sobre precios, usar una expresión regular.
+
+**Dato que cierra una pregunta abierta de la auditoría:** la cabecera
+`X-Served-By: cache-bog-...-BOG` confirma que GitHub Pages sirve el sitio
+**desde un nodo en Bogotá**. La duda sobre la latencia en Colombia queda
+resuelta y, por ahora, no hay motivo para mudarse a Cloudflare.
 
 ---
 
@@ -206,14 +243,12 @@ motivo**, no la borres.
 
 ## 🎯 Próximos pasos, en orden
 
-1. **Hacer el repo público** y poner Pages en *Source: GitHub Actions*.
-   Sin esto nada más importa.
-2. **Crear el Google Sheet** con `docs/plantilla-carta.csv` y pegar el ID en
-   `src/config.js`. Instrucciones paso a paso en el README.
-3. **Verificar el refresco en vivo** contra el Sheet real: abrir la carta,
-   cambiar un precio en el Sheet, recargar y ver si cambia sin esperar el
-   build. Si CORS lo bloquea, el plan B es un Worker de Cloudflare que haga
-   de intermediario.
-4. Probar el QR con varios celulares reales.
-5. Reemplazar los datos de ejemplo por los reales.
-6. Subir el nivel visual: fotos, GSAP, page curl con WebGL.
+1. **Confirmar el nombre real** de la panadería (¿Zahara?) y ponerlo en
+   `src/config.js`.
+2. **Probar el QR con celulares reales** antes de mandar a imprimir.
+3. **Pasarle el Sheet al dueño** y que lo use un día real: que marque un
+   agotado él mismo y vea si le resulta cómodo.
+4. Reemplazar los productos y precios de ejemplo por los reales.
+5. **El salto visual**: GSAP, page curl con WebGL, micro-interacciones.
+6. Fotos de los productos en WebP.
+7. Más adelante: panel `/panel` con botones grandes DISPONIBLE/AGOTADO.
