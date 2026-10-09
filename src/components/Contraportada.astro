@@ -1,0 +1,30 @@
+---
+/** Contraportada: horario, contacto y espacio para el QR de domicilios. */
+const { negocio } = Astro.props;
+
+const campos = [
+  ["Horario", negocio.horario],
+  ["Dirección", negocio.direccion],
+  ["Teléfono", negocio.telefono],
+  ["Redes", negocio.instagram],
+].filter(([, valor]) => valor);
+---
+
+<div class="back-page">
+  <p class="sec-kicker">Visítanos</p>
+  <h2 class="sec-title">{negocio.nombre}</h2>
+
+  {campos.map(([etiqueta, valor]) => (
+    <div class="info-block">
+      <p class="info-label">{etiqueta}</p>
+      <p class="info-value">{valor}</p>
+    </div>
+  ))}
+
+  <p class="info-label">Domicilios y redes</p>
+  <div class="qr-slot">
+    <span>Espacio para el QR de domicilios o redes</span>
+  </div>
+
+  <p class="thanks">¡Gracias por visitarnos!</p>
+</div>

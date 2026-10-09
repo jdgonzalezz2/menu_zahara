@@ -12,3 +12,8 @@ __pycache__/
 *.pyc
 .venv/
 venv/
+
+# Node / Astro
+node_modules/
+dist/
+.astro/

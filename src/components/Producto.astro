@@ -1,0 +1,43 @@
+---
+/**
+ * Una línea de la carta: nombre ····· precio, con su descripción y etiqueta.
+ * Se renderiza en el build, así que el cliente no baja JavaScript por esto.
+ */
+import { formatearPrecio } from "../lib/precio.js";
+
+const { producto } = Astro.props;
+
+const agotado = producto.etiqueta === "agotado";
+const nuevo = producto.etiqueta === "nuevo";
+
+// Los agotados se muestran sin precio, a propósito.
+const precio = agotado ? null : formatearPrecio(producto.precio);
+
+// data-producto deja que el refresco en vivo encuentre esta fila después.
+---
+
+<li class:list={["item", { agotado }]} data-producto={producto.nombre}>
+  <div class="item-row">
+    <span class="item-name">
+      {producto.nombre}
+      {nuevo && <span class="tag tag-nuevo">Nuevo</span>}
+      {agotado && <span class="tag tag-agotado">Agotado</span>}
+    </span>
+
+    <span class="item-dots"></span>
+
+    {precio && <span class="item-price">{precio}</span>}
+  </div>
+
+  {producto.desc && <p class="item-desc">{producto.desc}</p>}
+
+  {producto.img && (
+    <img
+      class="item-photo"
+      src={`${import.meta.env.BASE_URL}assets/${producto.img}`.replace(/\/+/g, "/")}
+      alt={`${producto.nombre} de la panadería`}
+      loading="lazy"
+      decoding="async"
+    />
+  )}
+</li>

@@ -1,0 +1,79 @@
+---
+/**
+ * Estructura de la carta: la cabecera, el "escenario" del libro y la barra
+ * de navegación. Las páginas entran por el <slot />.
+ */
+import "../styles/carta.css";
+
+const { titulo, descripcion, paginas, configEnVivo = null } = Astro.props;
+const total = paginas.length;
+---
+
+<!DOCTYPE html>
+<html lang="es-CO">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>{titulo}</title>
+  <meta name="description" content={descripcion} />
+  <meta name="theme-color" content="#FBF6EC" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#171310" media="(prefers-color-scheme: dark)" />
+
+  <!-- Único host externo permitido. Si no carga, hay fallback del sistema. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Karla:wght@400;500;700&display=swap"
+  />
+</head>
+
+<body>
+  <main class="stage" id="stage" aria-label="Carta de la panadería">
+    <div class="book" id="book">
+      <slot />
+    </div>
+
+    <!-- Franjas laterales para pasar página tocando. Los lectores de pantalla
+         usan los botones ‹ › de la barra, así que estas quedan ocultas. -->
+    <button class="tap prev" id="tapPrev" tabindex="-1" aria-hidden="true"></button>
+    <button class="tap next" id="tapNext" tabindex="-1" aria-hidden="true"></button>
+  </main>
+
+  <nav class="bar" aria-label="Navegación de páginas">
+    <button class="arrow-btn" id="btnPrev" aria-label="Página anterior">&lsaquo;</button>
+
+    <div class="dots" id="dots" role="tablist" aria-label="Ir a una página">
+      {paginas.map((nombre, i) => (
+        <button
+          class="dot"
+          type="button"
+          role="tab"
+          data-indice={i}
+          aria-label={`Ir a la página ${i + 1}: ${nombre}`}
+        ></button>
+      ))}
+    </div>
+
+    <span class="counter" id="counter" aria-hidden="true">1/{total}</span>
+    <button class="arrow-btn" id="btnNext" aria-label="Página siguiente">&rsaquo;</button>
+  </nav>
+
+  <!-- Anuncio para lectores de pantalla al cambiar de página -->
+  <p class="sr-only" id="live" aria-live="polite"></p>
+
+  {/* Config del refresco en vivo. Si no hay Sheet, esta etiqueta no existe
+      y el script ni lo intenta. */}
+  {configEnVivo && (
+    <script
+      type="application/json"
+      id="config-en-vivo"
+      set:html={JSON.stringify(configEnVivo)}
+    />
+  )}
+
+  <script>
+    import "../scripts/flipbook.js";
+  </script>
+</body>
+</html>

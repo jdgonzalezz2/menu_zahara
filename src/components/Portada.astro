@@ -1,0 +1,16 @@
+---
+/** Portada de la carta. */
+const { negocio } = Astro.props;
+---
+
+<div class="cover">
+  <p class="cover-kicker">Carta</p>
+  <h1 class="cover-name">{negocio.nombre}</h1>
+  <hr class="cover-rule" />
+  {negocio.lema && <p class="cover-lema">{negocio.lema}</p>}
+
+  <p class="cover-hint">
+    <span>Desliza para pasar la página</span>
+    <span class="arrow">›</span>
+  </p>
+</div>

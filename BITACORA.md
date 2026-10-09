@@ -14,8 +14,9 @@
 
 ## 📍 Estado actual (al 9 de octubre de 2026)
 
-**Dónde estamos:** hay una **v1 funcionando y subida a GitHub**. Es una carta
-tipo revista, de 6 páginas, hecha en HTML/CSS/JS puro, con datos de ejemplo.
+**Dónde estamos:** **v2 construida en Astro y subida a GitHub.** Carta tipo
+revista de 6 páginas, lista para leer los productos de un Google Sheet.
+Pesa 7,1 KB gzip.
 
 **Qué funciona hoy**
 
@@ -33,8 +34,11 @@ tipo revista, de 6 páginas, hecha en HTML/CSS/JS puro, con datos de ejemplo.
 - 🔴 **El repositorio está privado.** GitHub Pages en cuenta gratis **solo
   publica repos públicos**. Hay que hacerlo público (o pagar Pro). Esto
   bloquea todo lo demás.
+- 🟡 **Falta crear el Google Sheet** y pegar su ID en `src/config.js`.
+  Mientras tanto la carta usa `src/data/menu-respaldo.json`.
+- 🟡 El **refresco en vivo** está implementado pero **no probado contra un
+  Sheet real**. Si falla, no rompe nada: queda lo horneado en el build.
 - 🟡 Los productos, los precios y el nombre son **de ejemplo**.
-- 🟡 El dueño todavía no puede editar nada por su cuenta (es el objetivo de la v2).
 
 ---
 
@@ -107,6 +111,57 @@ argumentadas con números en la auditoría.
 
 ---
 
+### Sesión 3 — 9 de octubre de 2026 — *Migración a Astro y conexión al Sheet*
+
+Julián eligió: **Astro**, esquema **híbrido** de datos, y arrancar por el
+Google Sheet.
+
+**Lo que se hizo**
+
+1. **Migración a Astro 7.** La carta se partió en componentes
+   (`Portada`, `Seccion`, `Producto`, `Contraportada`) con un layout común.
+   Las páginas se renderizan **en el build**, así que el navegador ya no baja
+   JavaScript para construir el DOM, solo para navegar.
+2. **Lector del Google Sheet** (`src/lib/sheet.js`), compartido entre el build
+   y el navegador: parser de CSV propio (aguanta comas y comillas dentro de
+   las celdas), lectura tolerante de precios (`2500`, `2.500`, `$ 2.500`) y
+   normalización de encabezados y estados.
+3. **22 pruebas** en `test/sheet.test.mjs`, sin red. Corren con `npm test` y
+   también en el workflow antes de publicar.
+4. **GitHub Action** que construye y publica: en cada push, cada 15 minutos y
+   a mano.
+5. Plantilla `docs/plantilla-carta.csv` para crear el Sheet en un minuto.
+6. Se eliminaron `index.html` y `menu-data.js` de la v1 (quedan en el
+   historial de git).
+
+**Resultado medido:** el cliente baja **7,1 KB gzip** en total, contra los
+9,6 KB de la v1. Quedó más ordenado **y** más liviano, porque la construcción
+del DOM se fue al build. Para comparar, React vacío son ~45 KB.
+
+**Hallazgo técnico importante (CORS).** Hay dos formas de leer un Sheet y solo
+una sirve para el refresco en vivo:
+
+- `pub?output=csv` (publicar en la web) **redirige a `googleusercontent.com`
+  sin cabeceras CORS** → el navegador lo bloquea. Sirve en el build, no en vivo.
+- `gviz/tq?tqx=out:csv` sí manda CORS → **es el que usamos**.
+- La API oficial de Sheets necesita llave y Google planea cobrar excedentes
+  en 2026 → descartada.
+
+Por eso el refresco en vivo está escrito para **fallar en silencio**: si no
+funciona, la carta se queda con los datos horneados y no pasa nada. Esta parte
+**todavía no se ha probado contra un Sheet real** — hay que verificarla cuando
+exista.
+
+**Decisión de diseño que vale recordar:** si hay `SHEET_ID` configurado y el
+Sheet no se puede leer, **el build se cae a propósito**. Es preferible que la
+versión ya publicada se quede como está, a publicar datos viejos en silencio.
+
+**Nota de entorno:** Astro 7 pide Node ≥ 22.19 y la máquina de Julián tiene
+22.13. El build funciona igual, pero npm avisa. Si algo se rompe raro, esa es
+la primera sospecha.
+
+---
+
 ## ✅ Decisiones tomadas (y por qué)
 
 Estas ya están decididas. Si una se cambia, **anótalo aquí con la fecha y el
@@ -130,9 +185,9 @@ motivo**, no la borres.
 
 | # | Pregunta | Estado |
 |---|---|---|
-| A | ¿Stack de la v2: Astro, vanilla potenciado o React? | **Esperando a Julián.** Recomendación: Astro. |
-| B | ¿Fuente de datos editable: Sheets horneado, en vivo o híbrido? | **Esperando a Julián.** Recomendación: híbrido. |
-| C | ¿Seguir en GitHub Pages o pasar a Cloudflare Pages? | **Esperando.** Recomendación: GitHub Pages ahora, Cloudflare si crece. |
+| A | ¿Stack de la v2? | ✅ **Astro** (sesión 3). |
+| B | ¿Fuente de datos editable? | ✅ **Híbrido**: Sheet horneado en el build + refresco en vivo (sesión 3). |
+| C | ¿GitHub Pages o Cloudflare Pages? | 🟡 GitHub Pages por ahora. Revisar si hace falta repo privado o funciones de servidor. |
 | D | ¿El repo se hace público? | 🔴 **Bloquea el lanzamiento.** Sin esto no hay Pages gratis. |
 | E | ¿La panadería se llama **Zahara**? | El repo se llama `menu_zahara` pero la carta dice "Panadería El Horno" (nombre de muestra). |
 | F | ¿Se construye un panel propio para marcar agotados? | Fase 3. Un Sheet en el celular funciona, pero botones grandes serían mejor. |
@@ -151,9 +206,14 @@ motivo**, no la borres.
 
 ## 🎯 Próximos pasos, en orden
 
-1. **Hacer el repo público** y activar GitHub Pages. Sin esto nada más importa.
-2. Probar el QR con varios celulares reales.
-3. Que Julián elija stack y fuente de datos (decisiones A, B, C).
-4. Montar el Google Sheet y conectarlo.
+1. **Hacer el repo público** y poner Pages en *Source: GitHub Actions*.
+   Sin esto nada más importa.
+2. **Crear el Google Sheet** con `docs/plantilla-carta.csv` y pegar el ID en
+   `src/config.js`. Instrucciones paso a paso en el README.
+3. **Verificar el refresco en vivo** contra el Sheet real: abrir la carta,
+   cambiar un precio en el Sheet, recargar y ver si cambia sin esperar el
+   build. Si CORS lo bloquea, el plan B es un Worker de Cloudflare que haga
+   de intermediario.
+4. Probar el QR con varios celulares reales.
 5. Reemplazar los datos de ejemplo por los reales.
-6. Subir el nivel visual: fotos, tipografía, transiciones.
+6. Subir el nivel visual: fotos, GSAP, page curl con WebGL.

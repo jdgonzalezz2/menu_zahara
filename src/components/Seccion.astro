@@ -1,0 +1,20 @@
+---
+/** Una página de la carta: encabezado de sección + su lista de productos. */
+import Producto from "./Producto.astro";
+
+const { seccion, numero } = Astro.props;
+---
+
+<div class="menu-page" data-seccion={seccion.titulo}>
+  <header class="sec-head">
+    <p class="sec-kicker">{String(numero).padStart(2, "0")}</p>
+    <h2 class="sec-title">{seccion.titulo}</h2>
+    {seccion.subtitulo && <p class="sec-sub">{seccion.subtitulo}</p>}
+  </header>
+
+  <ul class="items">
+    {seccion.productos.map((producto) => <Producto producto={producto} />)}
+  </ul>
+
+  <p class="page-note">Precios en pesos colombianos · IVA incluido</p>
+</div>

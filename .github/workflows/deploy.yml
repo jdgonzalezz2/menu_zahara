@@ -1,0 +1,70 @@
+name: Publicar la carta
+
+# Se publica en tres casos:
+#   1. Cada vez que se sube un cambio al código.
+#   2. Cada 15 minutos, para recoger lo que el dueño haya cambiado en el Sheet.
+#   3. A mano, desde la pestaña Actions (botón "Run workflow").
+#
+# ⚠️ Dos cosas que hay que saber del punto 2:
+#   - GitHub NO garantiza la puntualidad de los schedules: a veces se demora
+#     bastante más de 15 minutos. Por eso la carta también refresca precios
+#     en vivo desde el navegador (ver src/scripts/flipbook.js).
+#   - GitHub DESACTIVA los schedules en repos públicos sin actividad por
+#     60 días. Si un día deja de actualizarse solo, es casi seguro eso:
+#     se reactiva desde la pestaña Actions.
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+# Permisos mínimos para publicar en Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Si hay varios despliegues encolados, que corra el último y ya.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  construir:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Bajar el código
+        uses: actions/checkout@v4
+
+      - name: Preparar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Probar el parser del Sheet
+        run: npm test
+
+      - name: Construir la carta
+        run: npm run build
+
+      - name: Subir el resultado
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
+
+  publicar:
+    needs: construir
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publicar en GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

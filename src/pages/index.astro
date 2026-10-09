@@ -1,0 +1,92 @@
+---
+/* ============================================================================
+   LA CARTA
+
+   Acá se decide de dónde salen los datos, y eso pasa EN EL BUILD, no en el
+   celular del cliente:
+
+     - Si hay un SHEET_ID configurado, se lee el Google Sheet y los productos
+       quedan horneados dentro del HTML.
+     - Si no hay, se usan los datos de ejemplo de src/data/menu-respaldo.json.
+
+   Resultado: la carta siempre carga al instante y funciona aunque Google se
+   caiga o el cliente tenga mala señal. El refresco "en vivo" que corre en el
+   navegador (ver src/scripts/flipbook.js) es un extra encima de esto.
+   ========================================================================== */
+
+import Carta from "../layouts/Carta.astro";
+import Portada from "../components/Portada.astro";
+import Seccion from "../components/Seccion.astro";
+import Contraportada from "../components/Contraportada.astro";
+
+import { SHEET_ID, SHEET_HOJA, NEGOCIO, TIMEOUT_EN_VIVO } from "../config.js";
+import { traerMenu, urlDelSheet } from "../lib/sheet.js";
+import respaldo from "../data/menu-respaldo.json";
+
+let menu = respaldo;
+let origen = "datos de ejemplo (no hay SHEET_ID configurado)";
+
+if (SHEET_ID) {
+  try {
+    // En el build sí podemos esperar: nadie está mirando la pantalla.
+    menu = await traerMenu(SHEET_ID, SHEET_HOJA, { timeout: 15000 });
+    origen = `Google Sheet (${menu.paginas.length} secciones)`;
+  } catch (error) {
+    // Decisión a propósito: si hay Sheet configurado pero no se pudo leer,
+    // reventamos el build en vez de publicar datos viejos en silencio.
+    // Así la versión que ya está publicada se queda como está, que es lo
+    // correcto, y nos enteramos del problema.
+    throw new Error(
+      "No se pudo leer el Google Sheet y por eso se detuvo el build.\n" +
+        "  Motivo: " + error.message + "\n" +
+        "  URL:    " + urlDelSheet(SHEET_ID, SHEET_HOJA) + "\n" +
+        '  Revisa que el Sheet esté compartido como "Cualquier persona con el enlace"\n' +
+        "  y que la pestaña se llame exactamente \"" + SHEET_HOJA + "\"."
+    );
+  }
+}
+
+console.log(`[carta] Origen de los datos: ${origen}`);
+
+// Orden final: Portada → una página por sección → Contraportada
+const nombresDePagina = [
+  "Portada",
+  ...menu.paginas.map((s) => s.titulo),
+  "Horario y contacto",
+];
+
+const total = nombresDePagina.length;
+
+// Lo que necesita el script del cliente para el refresco en vivo.
+// Si no hay Sheet configurado va en null y el refresco ni se intenta.
+const configEnVivo = SHEET_ID
+  ? { url: urlDelSheet(SHEET_ID, SHEET_HOJA), timeout: TIMEOUT_EN_VIVO }
+  : null;
+---
+
+<Carta
+  titulo={`Carta — ${NEGOCIO.nombre}`}
+  descripcion="Carta digital de la panadería. Pasa las páginas para ver productos, precios y disponibilidad."
+  paginas={nombresDePagina}
+  configEnVivo={configEnVivo}
+>
+  {nombresDePagina.map((nombre, i) => (
+    <article
+      class="page"
+      role="tabpanel"
+      aria-label={`Página ${i + 1} de ${total}: ${nombre}`}
+      data-titulo={nombre}
+    >
+      <div class="face front">
+        {i === 0 && <Portada negocio={NEGOCIO} />}
+        {i > 0 && i < total - 1 && (
+          <Seccion seccion={menu.paginas[i - 1]} numero={i} />
+        )}
+        {i === total - 1 && <Contraportada negocio={NEGOCIO} />}
+      </div>
+
+      {/* Cara trasera: papel en blanco, es lo que se ve a mitad del giro */}
+      <div class="face back"></div>
+    </article>
+  ))}
+</Carta>

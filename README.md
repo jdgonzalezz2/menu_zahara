@@ -3,225 +3,231 @@
 Menú virtual que el cliente abre **escaneando un QR** pegado en la mesa. Se ve
 como una revista: se pasa página por página en el celular.
 
-- **No necesita internet rápido**: es una sola página, sin librerías pesadas.
-- **No cuesta nada**: se publica gratis en GitHub Pages.
-- **El QR nunca cambia**: aunque cambies los productos cien veces, el papelito
+- **El dueño cambia precios desde un Google Sheet**, sin tocar código ni llamar
+  a nadie.
+- **Carga rapidísimo** aunque la señal esté mala: 7 KB en total.
+- **No cuesta nada**: GitHub Pages + Google Sheets, los dos gratis.
+- **El QR nunca cambia**: aunque cambien los productos mil veces, el papelito
   impreso sigue sirviendo.
 
 **URL del menú:** https://jdgonzalezz2.github.io/menu_zahara/
 
-> ⚠️ Ahora mismo los productos y precios son de **EJEMPLO**, igual que el nombre
-> "Panadería El Horno". Hay que reemplazarlos por los reales.
+> ⚠️ **Dos cosas pendientes antes de que esto funcione de verdad:**
+> 1. El repositorio está **privado**. GitHub Pages gratis solo publica repos
+>    públicos → hay que hacerlo público (ver paso 1).
+> 2. Los productos, precios y el nombre "Panadería El Horno" son **de ejemplo**.
 
 ---
 
-## 📁 Qué hay en cada archivo
+## 🚀 Puesta en marcha (una sola vez)
 
-| Archivo | Para qué sirve | ¿Lo tocas? |
-|---|---|---|
-| `menu-data.js` | Los productos, precios, horario y dirección | **Sí, este es el tuyo** |
-| `index.html` | El diseño y el funcionamiento del menú | No, salvo que quieras cambiar el diseño |
-| `assets/` | Las fotos de los productos | Sí, si vas a poner fotos |
-| `qr/menu-qr.png` | El código QR para imprimir | Solo si cambia la URL |
-| `qr/generar-qr.py` | El programita que crea el QR | Casi nunca |
+### Paso 1 — Hacer el repositorio público
 
----
+Sin esto nada más funciona.
 
-## 1. Cómo cambiar productos y precios
+1. En GitHub: **Settings** → **General**.
+2. Hasta abajo, zona roja *Danger Zone* → **Change visibility** → **Make public**.
 
-Todo está en **`menu-data.js`**. Ábrelo con cualquier editor de texto
-(Bloc de notas sirve, pero es mejor VS Code).
+No hay riesgo: es una carta de panadería, no hay contraseñas ni datos de
+clientes. Lo único que **nunca** debe subirse al repo es una llave de API.
 
-Cada producto es una línea así:
+### Paso 2 — Activar GitHub Pages
 
-```js
-{ nombre: "Pandebono", precio: 2500, desc: "Clásico, suave por dentro." },
-```
+1. **Settings** → **Pages**.
+2. En *Source* elige **GitHub Actions**.
+   ⚠️ **No** elijas "Deploy from a branch": la carta ahora se construye con
+   Astro y necesita el paso de build.
+3. Listo. Cada vez que se suba un cambio, la carta se publica sola.
 
-- **`nombre`** → el nombre que verá el cliente.
-- **`precio`** → el número **sin puntos y sin `$`**. Escribe `2500`, no `$2.500`.
-  El menú le pone los puntos solo y lo muestra como `$ 2.500`.
-  Los precios se muestran **con IVA incluido**, como exige la ley en Colombia:
-  pon el precio final que paga el cliente.
-- **`desc`** → descripción corta. Opcional: puedes dejarla vacía `desc: ""`.
+### Paso 3 — Crear el Google Sheet
 
-### Ejemplo concreto: subir el pandebono de $2.500 a $2.800
+1. Entra a [sheets.new](https://sheets.new) para crear una hoja nueva.
+2. **Archivo → Importar → Subir** y sube el archivo
+   [`docs/plantilla-carta.csv`](docs/plantilla-carta.csv) de este repo.
+   Elige *Reemplazar hoja de cálculo*. Ya te quedan las columnas correctas y
+   los productos de ejemplo.
+3. Cambia el nombre de la pestaña de abajo a **`Carta`** (exactamente así,
+   con mayúscula y sin espacios).
+4. Arriba a la derecha: **Compartir** → en *Acceso general* elige
+   **"Cualquier persona con el enlace"** con rol **Lector**.
+   Sin esto, el sitio no puede leer la hoja.
+5. Copia el **ID** de la hoja, que está en la URL:
 
-Buscas esta línea:
+   ```
+   https://docs.google.com/spreadsheets/d/1AbC...XyZ/edit
+                                           ^^^^^^^^^^^ esto
+   ```
 
-```js
-{ nombre: "Pandebono", precio: 2500, desc: "Clásico, suave por dentro." },
-```
+6. Pégalo en [`src/config.js`](src/config.js):
 
-y la dejas así:
+   ```js
+   export const SHEET_ID = "1AbC...XyZ";
+   ```
 
-```js
-{ nombre: "Pandebono", precio: 2800, desc: "Clásico, suave por dentro." },
-```
+7. `git add . && git commit -m "Conecto el Sheet" && git push`
 
-Guardas, y publicas (ver **punto 3**).
-
-### Para agregar un producto nuevo
-
-Copia una línea entera, pégala debajo y cámbiale el texto. **Cuida la coma `,`
-al final** y las comillas `" "`.
-
-```js
-{ nombre: "Buñuelo", precio: 2000, desc: "Crocante por fuera." },
-```
-
-### Para quitar un producto
-
-Borra la línea completa, de `{` hasta `},`.
-
-> 💡 **Si algo se rompe** y el menú sale en blanco, casi siempre es una comilla
-> o una coma que falta. Deshaz el último cambio (`Ctrl + Z`) y vuelve a intentar.
+A los dos minutos la carta ya está leyendo del Sheet.
 
 ---
 
-## 2. Cómo marcar un producto como **agotado** o **nuevo**
+## 📊 Cómo el dueño cambia precios y marca agotados
 
-Se le agrega `etiqueta` al final del producto:
+**Él solo abre el Google Sheet** (desde el computador o desde la app de Google
+Sheets en el celular) y edita. Nada más.
 
-**Agotado** (se ve en gris, tachado y **sin precio**):
+La hoja tiene estas columnas:
 
-```js
-{ nombre: "Tamal santafereño", precio: 10000, desc: "Fin de semana.", etiqueta: "agotado" },
-```
+| Seccion | Producto | Precio | Descripcion | Estado | Foto |
+|---|---|---|---|---|---|
+| Panadería | Pandebono | 2500 | Clásico y suave. | | |
+| Panadería | Roscón | 4500 | Con arequipe. | nuevo | |
+| Desayunos | Tamal | 10000 | Fin de semana. | agotado | |
 
-**Nuevo** (sale una insignia naranja que dice NUEVO):
+- **Seccion** → en qué página sale. Si escribe una sección nueva, se crea
+  sola. El orden de las páginas es el orden en que aparecen las secciones.
+- **Producto** → el nombre. Si esta celda está vacía, la fila se ignora.
+- **Precio** → el número. Da igual si escribe `2500`, `2.500` o `$ 2.500`:
+  la carta lo entiende. Es el **precio final con IVA incluido**, como exige
+  la ley en Colombia.
+- **Descripcion** → opcional.
+- **Estado** → se deja vacío, o se escribe `nuevo` o `agotado`.
+  Da igual mayúsculas o minúsculas.
+  - `agotado` → el producto sale en gris, tachado y **sin precio**.
+  - `nuevo` → sale una insignia naranja.
+- **Foto** → opcional, el nombre del archivo WebP (ver más abajo).
 
-```js
-{ nombre: "Roscón con arequipe", precio: 4500, desc: "Relleno generoso.", etiqueta: "nuevo" },
-```
+**Para agregar un producto:** escribe una fila nueva.
+**Para quitarlo:** borra la fila.
 
-**Volver a lo normal**: borra la parte `, etiqueta: "agotado"` y ya.
+### ¿En cuánto se ve el cambio?
 
-> Esto está pensado para el día a día de la panadería: si se acabó el pan de
-> queso a las 11 a.m., lo marcas agotado y el cliente no lo pide en vano.
+- **Casi al instante** para el cliente que abra la carta después del cambio.
+  La carta pide los datos frescos por detrás cada vez que alguien la abre.
+- **Cada 15 minutos** se reconstruye el sitio completo con los datos nuevos.
+
+Las dos cosas funcionan a la vez, a propósito: si Google falla o el cliente
+tiene mala señal, la carta igual se ve, con los últimos datos horneados.
+**Nunca queda en blanco.**
 
 ---
 
-## 3. Cómo publicar los cambios (GitHub Pages)
-
-### La primera vez: activar GitHub Pages
-
-1. Entra al repositorio en GitHub: https://github.com/jdgonzalezz2/menu_zahara
-2. Arriba, pestaña **Settings** (Configuración).
-3. En el menú de la izquierda, **Pages**.
-4. En *Source* elige **Deploy from a branch**.
-5. En *Branch* elige **`main`** y la carpeta **`/ (root)`**.
-6. Dale **Save**.
-7. Espera 1–2 minutos y recarga. GitHub te mostrará la dirección:
-
-   **https://jdgonzalezz2.github.io/menu_zahara/**
-
-Esa es la URL que lleva el QR. **No la cambies** después de imprimir los QR.
-
-### Cada vez que cambies algo
-
-Desde la carpeta del proyecto, en la terminal:
+## 💻 Para Julián: trabajar en el código
 
 ```bash
-git add .
-git commit -m "Subo precio del pandebono"
-git push
+npm install     # una sola vez
+npm run dev     # servidor local en http://localhost:4321/menu_zahara
+npm test        # pruebas del lector del Sheet
+npm run build   # genera dist/
 ```
 
-En **1 o 2 minutos** el menú ya está actualizado para todos los clientes. No hay
-que reimprimir nada.
+### Estructura
 
-> Si prefieres no usar la terminal: en GitHub puedes abrir `menu-data.js`, darle
-> al lápiz ✏️ (*Edit this file*), cambiar el texto y abajo **Commit changes**.
-> Funciona igual.
+```
+src/
+  config.js            ← SHEET_ID y datos del negocio. Lo que más vas a tocar.
+  pages/index.astro    ← arma la carta; acá se lee el Sheet en el build
+  layouts/Carta.astro  ← cabecera, escenario del libro y barra de navegación
+  components/          ← Portada, Seccion, Producto, Contraportada
+  lib/sheet.js         ← lee y parsea el Sheet (se usa en build Y en el navegador)
+  lib/precio.js        ← formato de pesos colombianos
+  scripts/flipbook.js  ← navegación + refresco en vivo (lo único que baja el cliente)
+  styles/carta.css     ← todos los estilos y los tokens de color
+  data/menu-respaldo.json ← datos de ejemplo, se usan si no hay Sheet
+public/assets/         ← fotos en WebP
+qr/                    ← el QR para imprimir y el script que lo genera
+test/                  ← pruebas del parser
+```
+
+### Cómo decide de dónde saca los datos
+
+- Si `SHEET_ID` está vacío → usa `src/data/menu-respaldo.json` (ejemplo).
+- Si `SHEET_ID` tiene algo → lee el Sheet en el build.
+  **Si el Sheet falla, el build se cae a propósito**, para que la versión que
+  ya está publicada se quede como está en vez de publicar datos viejos en
+  silencio.
 
 ---
 
-## 4. El código QR
+## 📷 Cómo añadir fotos
+
+1. **Convierte la foto a WebP** con [Squoosh](https://squoosh.app/) (gratis).
+   Apunta a **menos de 80 KB** por foto.
+2. Guárdala en **`public/assets/`** con nombre sencillo, sin tildes ni
+   espacios: `pandebono.webp`.
+3. En el Google Sheet, escribe `pandebono.webp` en la columna **Foto**.
+4. `git push` de la foto. Listo.
+
+Las fotos se cargan solo cuando el cliente llega a esa página
+(`loading="lazy"`), así que no vuelven lenta la carta.
+
+---
+
+## 🔲 El código QR
 
 ### Cómo se generó
 
-Con la librería **`qrcode` de Python**, ejecutada **en el computador** (no en una
-página web). Esto importa: los generadores de "QR dinámico" de internet son
+Con la librería **`qrcode` de Python**, ejecutada **en el computador**, no en
+una página web. Esto importa: los generadores de "QR dinámico" de internet son
 gratis al principio y después cobran o dejan de funcionar, y te dejan los
-letreros impresos inservibles. Este QR es **estático** y apunta directo a nuestra
-URL, así que **sirve para siempre**.
+letreros impresos inservibles. Este QR es **estático** y apunta directo a
+nuestra URL, así que **sirve para siempre**.
 
-El archivo está en **`qr/menu-qr.png`** (1000×1000 px, listo para imprimir).
+Está en **`qr/menu-qr.png`** (1000×1000 px, listo para imprimir).
 
-### Cómo volver a generarlo (solo si cambia la URL)
+### Volver a generarlo (solo si cambia la URL)
 
 ```bash
 pip install "qrcode[pil]"
 python qr/generar-qr.py
-```
-
-Y si la URL es otra (por ejemplo si algún día compras un dominio propio):
-
-```bash
-python qr/generar-qr.py https://panaderiaelhorno.com/
+python qr/generar-qr.py https://otra-url.com/   # si cambia el dominio
 ```
 
 ### Para imprimirlo bien
 
-- Tamaño **mínimo 3–4 cm** de lado. Más pequeño falla con cámaras malas.
-- **No le quites el borde blanco** alrededor: el lector lo necesita.
-- Plastificado o en soporte de acrílico — en una panadería le va a caer harina,
-  grasa y agua.
-- Escribe debajo algo como **"Escanea para ver la carta"** y la URL en letra
-  pequeña, por si alguien no puede escanear.
+- Mínimo **3–4 cm** de lado. Más pequeño falla con cámaras malas.
+- **No le quites el borde blanco**: el lector lo necesita.
+- Plastificado o en soporte de acrílico — le va a caer harina, grasa y agua.
+- Escribe debajo *"Escanea para ver la carta"* y la URL en letra pequeña.
 - ⚠️ **Pruébalo con varios celulares antes de mandar a imprimir todos**:
-  un Android viejo, un iPhone, con poca luz y con la pantalla sucia.
+  un Android viejo, un iPhone, con poca luz y la pantalla sucia.
 
 ---
 
-## 5. Cómo añadir fotos
+## 🔧 Detalles técnicos
 
-Por ahora el menú es **solo texto**: se ve limpio y carga rapidísimo incluso con
-mala señal. Pero ya está listo para fotos.
-
-1. **Convierte la foto a WebP** (pesa mucho menos que JPG). Puedes usar
-   [Squoosh](https://squoosh.app/) — es gratis y funciona en el navegador.
-   Apunta a que cada foto pese **menos de 100 KB**.
-2. **Guárdala en la carpeta `assets/`** con un nombre sencillo, sin tildes ni
-   espacios: `pandebono.webp`.
-3. **Menciónala en `menu-data.js`** agregando `img`:
-
-   ```js
-   { nombre: "Pandebono", precio: 2500, desc: "Clásico.", img: "pandebono.webp" },
-   ```
-
-4. Guardas, `git push`, y listo.
-
-Las fotos se cargan solo cuando el cliente llega a esa página (`loading="lazy"`),
-así que no vuelven lento el menú.
-
----
-
-## 6. Detalles técnicos (para Julián)
-
-- **Sin frameworks ni librerías.** HTML + CSS + JS puro en un solo `index.html`.
-  No depende de ningún CDN que pueda fallar con mala señal. Lo único externo son
-  las fuentes de Google Fonts (*Fraunces* y *Karla*), y si no cargan hay
-  *fallback* del sistema.
+- **Astro** genera HTML estático. El cliente baja **~7 KB gzip en total**
+  (HTML con el CSS incrustado + 2,3 KB de JavaScript). No hay framework de
+  interfaz en el navegador.
 - **El efecto de pasar página** está hecho a mano con `rotateY` sobre el lomo
-  izquierdo (`transform-origin: left center`) y `perspective` en el contenedor.
-  Cada hoja tiene cara frontal y trasera con `backface-visibility: hidden`.
-- **Navegación**: tocar los lados, swipe, botones ‹ ›, puntitos y flechas del
-  teclado (← → , Home, End).
-- **Temas claro y oscuro**: todos los colores son variables en `:root` y se
-  redefinen bajo `@media (prefers-color-scheme: dark)`.
-- **Accesibilidad**: `aria-label` en los controles, foco visible, y un
+  izquierdo y `perspective` en el contenedor. Cada hoja tiene cara frontal y
+  trasera con `backface-visibility: hidden`.
+- **Navegación**: tocar los lados, swipe, botones ‹ ›, puntitos y teclado
+  (← → , Home, End).
+- **Temas claro y oscuro**: todos los colores son variables en `:root`,
+  redefinidas bajo `@media (prefers-color-scheme: dark)`.
+- **Accesibilidad**: `aria-label` en los controles, foco visible y un
   `aria-live` que anuncia la página al cambiar.
 - **`prefers-reduced-motion`**: si el usuario pide menos animación, el giro
-  pasa a ser casi instantáneo.
+  es casi instantáneo.
+- **Lectura del Sheet**: se usa el endpoint `gviz`, no la API de Google.
+  La API necesita llave y Google planea cobrar excedentes; `gviz` no necesita
+  nada y manda cabeceras CORS, que es lo que permite el refresco en vivo.
+
+### Una advertencia sobre la actualización automática
+
+GitHub **desactiva los *schedules*** en repos públicos que llevan 60 días sin
+actividad. Si un día la carta deja de actualizarse sola, casi seguro es eso:
+se reactiva desde la pestaña **Actions** del repo. El refresco en vivo desde
+el navegador sigue funcionando igual.
 
 ---
 
-## ✅ Pendientes (datos reales)
+## ✅ Pendientes
 
+- [ ] Hacer el repo público y activar Pages
+- [ ] Crear el Google Sheet y pegar el `SHEET_ID`
 - [ ] Nombre real y logo de la panadería
 - [ ] Colores / identidad visual
-- [ ] Lista de productos con precios actuales
+- [ ] Lista de productos con precios reales
 - [ ] Fotos propias de los productos (opcional)
 - [ ] Dirección, horario y QR/enlace de domicilios o redes
