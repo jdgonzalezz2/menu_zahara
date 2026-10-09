@@ -4,10 +4,15 @@ Guárdame como `CLAUDE.md` en la raíz del repositorio. Claude Code me lee
 automáticamente al inicio de cada sesión, así que sirvo de contexto permanente
 y, la primera vez, de prompt de arranque.
 
-> **Primera sesión — qué quiero que hagas:** lee todo este archivo y construye
-> el proyecto completo descrito abajo (estructura de carpetas, `index.html`,
-> archivo de datos, `README.md` y el QR). Pregúntame solo lo imprescindible;
-> para lo demás, toma decisiones razonables y avísame qué asumiste.
+> ⚠️ **Empieza por aquí.** La v1 del proyecto **ya está construida** (sesión del
+> 9 de octubre de 2026). Este archivo describe *qué queremos y por qué*; lo que
+> ya se hizo, lo que se decidió y lo que falta está en **[`BITACORA.md`](BITACORA.md)**.
+> **Léela antes de tocar nada** y agrégale una entrada cuando termines.
+> El análisis de stack, datos editables, animaciones y hosting está en
+> [`docs/AUDITORIA-TECNICA.md`](docs/AUDITORIA-TECNICA.md).
+>
+> *(El prompt de arranque original que vivía en este bloque ya se cumplió; se
+> quitó para que nadie reconstruya el proyecto desde cero por error.)*
 
 ---
 
