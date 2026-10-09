@@ -18,14 +18,21 @@
       - La API oficial sí necesita llave y Google planea cobrar excedentes.
    ========================================================================== */
 
-/** Arma la URL del Sheet en formato CSV. */
+/**
+ * Arma la URL del Sheet en formato CSV.
+ *
+ * Si `hoja` viene vacía, no se manda el parámetro y Google usa la PRIMERA
+ * pestaña. Es a propósito: así no importa cómo se llame la pestaña y nos
+ * ahorramos el error más tonto y más común de todo este montaje.
+ */
 export function urlDelSheet(sheetId, hoja) {
-  return (
+  const base =
     "https://docs.google.com/spreadsheets/d/" +
     encodeURIComponent(sheetId) +
-    "/gviz/tq?tqx=out:csv&sheet=" +
-    encodeURIComponent(hoja)
-  );
+    "/gviz/tq?tqx=out:csv";
+
+  const nombre = String(hoja ?? "").trim();
+  return nombre ? base + "&sheet=" + encodeURIComponent(nombre) : base;
 }
 
 /* --------------------------------------------------------------------------

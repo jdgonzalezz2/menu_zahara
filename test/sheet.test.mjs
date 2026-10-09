@@ -69,6 +69,11 @@ try {
 
 // --- URL ---
 ok(urlDelSheet('ABC123', 'Carta').includes('gviz/tq?tqx=out:csv'), 'usa gviz, no la API');
+ok(urlDelSheet('ABC123', 'Carta').includes('&sheet=Carta'), 'con nombre de pestaña');
+ok(!urlDelSheet('ABC123', '').includes('&sheet='), 'pestaña vacía -> primera pestaña');
+ok(!urlDelSheet('ABC123', '   ').includes('&sheet='), 'pestaña en blanco -> primera pestaña');
+ok(!urlDelSheet('ABC123').includes('&sheet='), 'sin pestaña -> primera pestaña');
+ok(urlDelSheet('ABC123', 'plantilla-carta').includes('&sheet=plantilla-carta'), 'nombre con guión');
 
 console.log(fallos ? `\n${fallos} FALLOS` : '\n*** TODAS LAS PRUEBAS PASAN ***');
 process.exit(fallos ? 1 : 0);

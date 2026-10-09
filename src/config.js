@@ -17,8 +17,15 @@
  */
 export const SHEET_ID = "";
 
-/** Nombre de la pestaña del Sheet donde están los productos. */
-export const SHEET_HOJA = "Carta";
+/**
+ * Nombre de la pestaña del Sheet donde están los productos.
+ *
+ * Déjalo vacío ("") y se usa la PRIMERA pestaña, se llame como se llame.
+ * Es lo recomendado mientras haya una sola pestaña: una cosa menos que se
+ * puede escribir mal. Solo vale la pena poner el nombre exacto si algún día
+ * la hoja tiene varias pestañas y hay que elegir una.
+ */
+export const SHEET_HOJA = "";
 
 /**
  * Cuánto espera la carta, ya abierta en el celular del cliente, a que Google

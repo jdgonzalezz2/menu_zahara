@@ -46,8 +46,9 @@ clientes. Lo único que **nunca** debe subirse al repo es una llave de API.
    [`docs/plantilla-carta.csv`](docs/plantilla-carta.csv) de este repo.
    Elige *Reemplazar hoja de cálculo*. Ya te quedan las columnas correctas y
    los productos de ejemplo.
-3. Cambia el nombre de la pestaña de abajo a **`Carta`** (exactamente así,
-   con mayúscula y sin espacios).
+3. La pestaña puede llamarse como sea: por defecto se lee **la primera**.
+   (Si algún día la hoja tiene varias pestañas, pon el nombre exacto de la
+   buena en `SHEET_HOJA`, en `src/config.js`.)
 4. Arriba a la derecha: **Compartir** → en *Acceso general* elige
    **"Cualquier persona con el enlace"** con rol **Lector**.
    Sin esto, el sitio no puede leer la hoja.
