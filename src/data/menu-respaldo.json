@@ -1,140 +1,74 @@
 {
   "paginas": [
     {
-      "titulo": "Panadería",
-      "subtitulo": "Recién salido del horno",
-      "productos": [
-        {
-          "nombre": "Pandebono",
-          "precio": 2500,
-          "desc": "Clásico, suave por dentro y dorado por fuera."
-        },
-        {
-          "nombre": "Almojábana",
-          "precio": 2800,
-          "desc": "Con queso costeño, esponjosa."
-        },
-        {
-          "nombre": "Pan de queso",
-          "precio": 2600,
-          "desc": "Masa de yuca y queso."
-        },
-        {
-          "nombre": "Roscón con arequipe",
-          "precio": 4500,
-          "desc": "Relleno generoso de arequipe.",
-          "etiqueta": "nuevo"
-        },
-        {
-          "nombre": "Mojicón",
-          "precio": 3000,
-          "desc": "Dulce, con azúcar por encima."
-        },
-        {
-          "nombre": "Pan aliñado",
-          "precio": 2000,
-          "desc": ""
-        }
-      ]
-    },
-    {
       "titulo": "Desayunos",
-      "subtitulo": "Para empezar bien el día",
+      "subtitulo": "",
       "productos": [
         {
-          "nombre": "Caldo de costilla",
-          "precio": 9000,
-          "desc": "Con papa, cilantro y arepa."
+          "nombre": "Combo 1",
+          "precio": 11000,
+          "desc": "Huevos, chocolate, pan y queso.",
+          "etiqueta": ""
         },
         {
-          "nombre": "Calentado paisa",
-          "precio": 12000,
-          "desc": "Arroz, frijol, huevo y arepa."
+          "nombre": "Combo 2",
+          "precio": 11500,
+          "desc": "Tamal, jugo de naranja y pan.",
+          "etiqueta": ""
         },
         {
-          "nombre": "Huevos al gusto",
-          "precio": 7000,
-          "desc": "Revueltos o fritos, con pan."
+          "nombre": "Combo 3 — Caldo de costilla",
+          "precio": 14000,
+          "desc": "Caldo de costilla, chocolate, pan y queso.",
+          "etiqueta": ""
         },
         {
-          "nombre": "Tamal santafereño",
-          "precio": 10000,
-          "desc": "Fin de semana.",
-          "etiqueta": "agotado"
+          "nombre": "Combo 3 — Caldo de pescado",
+          "precio": 15000,
+          "desc": "Caldo de pescado, chocolate, pan y queso.",
+          "etiqueta": ""
         },
         {
-          "nombre": "Arepa de huevo",
-          "precio": 4000,
-          "desc": ""
-        }
-      ]
-    },
-    {
-      "titulo": "Bebidas",
-      "subtitulo": "Calientes y frías",
-      "productos": [
-        {
-          "nombre": "Chocolate con queso",
-          "precio": 5500,
-          "desc": "Espumoso, con porción de queso."
+          "nombre": "Combo 4",
+          "precio": 13300,
+          "desc": "Changua, chocolate, pan y queso.",
+          "etiqueta": ""
         },
         {
-          "nombre": "Aguapanela con limón",
-          "precio": 3500,
-          "desc": ""
+          "nombre": "Combo 5",
+          "precio": 14200,
+          "desc": "Huevos con arroz, chocolate, pan y queso.",
+          "etiqueta": ""
         },
         {
-          "nombre": "Café en leche",
-          "precio": 4000,
-          "desc": ""
+          "nombre": "Combo 6",
+          "precio": 13800,
+          "desc": "Fruta, jugo natural, queso campesino y pan integral.",
+          "etiqueta": ""
         },
         {
-          "nombre": "Tinto campesino",
-          "precio": 2000,
-          "desc": ""
+          "nombre": "Combo 7",
+          "precio": 16500,
+          "desc": "Calentado con carne y jugo al gusto.",
+          "etiqueta": ""
         },
         {
-          "nombre": "Jugo natural del día",
-          "precio": 5000,
-          "desc": "Pregunta por la fruta.",
-          "etiqueta": "nuevo"
+          "nombre": "Combo 8",
+          "precio": 16000,
+          "desc": "Huevos rancheros, chocolate y pan.",
+          "etiqueta": ""
         },
         {
-          "nombre": "Avena helada",
-          "precio": 4500,
-          "desc": ""
-        }
-      ]
-    },
-    {
-      "titulo": "Postres",
-      "subtitulo": "Para el gusto dulce",
-      "productos": [
-        {
-          "nombre": "Merengón",
-          "precio": 8000,
-          "desc": "Merengue con crema y frutas."
+          "nombre": "Combo 9",
+          "precio": 17500,
+          "desc": "Moñona y jugo al gusto.",
+          "etiqueta": ""
         },
         {
-          "nombre": "Obleas con arequipe",
-          "precio": 4000,
-          "desc": "Con queso rallado y mora."
-        },
-        {
-          "nombre": "Flan de caramelo",
-          "precio": 5000,
-          "desc": ""
-        },
-        {
-          "nombre": "Torta de la casa",
-          "precio": 6000,
-          "desc": "Pregunta por el sabor del día."
-        },
-        {
-          "nombre": "Brevas con arequipe",
-          "precio": 6500,
-          "desc": "",
-          "etiqueta": "agotado"
+          "nombre": "Combo 10",
+          "precio": 16500,
+          "desc": "Omelette, jugo natural y pan.",
+          "etiqueta": ""
         }
       ]
     }

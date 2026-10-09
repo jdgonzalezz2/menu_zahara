@@ -48,12 +48,35 @@ export const TIMEOUT_EN_VIVO = 2500;
    Sheet: menos cosas que se puedan romper en el día a día.
    ---------------------------------------------------------------------- */
 export const NEGOCIO = {
-  nombre: "Panadería El Horno",          // ← nombre de MUESTRA
-  lema: "Pan de verdad, todos los días",
+  nombre: "Panadería Zahara",
+  lema: "Panadería · Desayunos · Pizzería · Frutería",
 
-  // Datos reales PENDIENTES (déjalos así hasta tenerlos):
-  direccion: "[Dirección pendiente]",
-  horario: "[Horario pendiente — ej: Lun–Sáb 6:00 a.m. – 8:00 p.m.]",
-  telefono: "[Teléfono / WhatsApp pendiente]",
+  // ✅ Confirmada en la ficha de Google Maps del negocio
+  direccion: "Cra. 59 #132A-36, Bogotá",
+
+  // ⚠️ PENDIENTES. No los inventamos: van como marcador hasta confirmarlos.
+  //
+  //  - horario:  Google solo muestra "Cierra a las 10 p.m.". Falta la hora
+  //              de apertura y qué pasa los domingos y festivos.
+  //  - telefono: Google muestra "12855192", que parece el fijo de Bogotá en
+  //              formato viejo → hoy sería (601) 285 5192. HAY QUE
+  //              CONFIRMARLO con el dueño antes de publicarlo, y preguntar
+  //              si prefieren un WhatsApp para domicilios.
+  horario: "[Horario pendiente de confirmar]",
+  telefono: "[Teléfono pendiente de confirmar]",
   instagram: "[@usuario pendiente]",
 };
+
+/**
+ * Modo borrador.
+ *
+ * En true, la carta le pide a los buscadores que NO la indexen.
+ *
+ * Está así a propósito: Zahara es un negocio real, con 555 reseñas en
+ * Google, y mientras los productos del Sheet sigan siendo los de ejemplo
+ * sería feo que Google indexara precios inventados bajo su nombre.
+ *
+ * ➡️ Ponlo en false cuando el Sheet ya tenga los productos y precios reales
+ *    confirmados por el dueño.
+ */
+export const BORRADOR = true;

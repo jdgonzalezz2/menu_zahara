@@ -5,7 +5,7 @@
  */
 import "../styles/carta.css";
 
-const { titulo, descripcion, paginas, configEnVivo = null } = Astro.props;
+const { titulo, descripcion, paginas, configEnVivo = null, borrador = false } = Astro.props;
 const total = paginas.length;
 ---
 
@@ -16,6 +16,11 @@ const total = paginas.length;
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>{titulo}</title>
   <meta name="description" content={descripcion} />
+
+  {/* Mientras la carta sea un borrador con datos de ejemplo, que los
+      buscadores no la indexen bajo el nombre real del negocio.
+      Se apaga poniendo BORRADOR = false en src/config.js. */}
+  {borrador && <meta name="robots" content="noindex, nofollow" />}
   <meta name="theme-color" content="#FBF6EC" media="(prefers-color-scheme: light)" />
   <meta name="theme-color" content="#171310" media="(prefers-color-scheme: dark)" />
 

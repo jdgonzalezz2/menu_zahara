@@ -132,9 +132,16 @@ en COP.
 
 ---
 
-### Datos reales pendientes (los entrega Julián cuando los tenga)
-- [ ] Nombre real y logo de la panadería
-- [ ] Colores / identidad visual
-- [ ] Lista de productos con precios actuales
+### Datos reales (estado al 9 de octubre de 2026)
+- [x] **Nombre:** Panadería Zahara
+- [x] **Dirección:** Cra. 59 #132A-36, Bogotá
+- [ ] Logo y colores de la identidad visual
+- [ ] **Precios actuales confirmados por el dueño** (los que tenemos son de
+      junio de 2025, o sea ~16 meses viejos)
+- [ ] Carta completa: solo tenemos los 10 combos de desayuno. Faltan
+      panadería, pizzería, frutería y bebidas
+- [ ] Horario de apertura y días
+- [ ] Teléfono / WhatsApp de domicilios
 - [ ] Fotos propias de los productos (opcional)
-- [ ] Dirección, horario y QR/enlace de domicilios o redes
+
+> El estado detallado vive en [`BITACORA.md`](BITACORA.md).

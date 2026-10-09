@@ -19,7 +19,7 @@ import Portada from "../components/Portada.astro";
 import Seccion from "../components/Seccion.astro";
 import Contraportada from "../components/Contraportada.astro";
 
-import { SHEET_ID, SHEET_HOJA, SHEET_GID, NEGOCIO, TIMEOUT_EN_VIVO } from "../config.js";
+import { SHEET_ID, SHEET_HOJA, SHEET_GID, NEGOCIO, TIMEOUT_EN_VIVO, BORRADOR } from "../config.js";
 import { traerMenu, urlDelSheet } from "../lib/sheet.js";
 import respaldo from "../data/menu-respaldo.json";
 
@@ -69,6 +69,7 @@ const configEnVivo = SHEET_ID
   descripcion="Carta digital de la panadería. Pasa las páginas para ver productos, precios y disponibilidad."
   paginas={nombresDePagina}
   configEnVivo={configEnVivo}
+  borrador={BORRADOR}
 >
   {nombresDePagina.map((nombre, i) => (
     <article

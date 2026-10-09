@@ -33,8 +33,13 @@ salen de la hoja del dueño, 7,1 KB gzip, servida desde Bogotá en ~145 ms.
   responde, pero hay que escanearlo de verdad antes de mandar a imprimir.
 - 🟡 Los productos, los precios y el nombre **siguen siendo de ejemplo**
   (ahora viven en el Sheet, que es lo importante).
-- 🟡 **Falta confirmar el nombre real.** El repo y el Sheet dicen *Zahara*,
-  pero la carta sigue diciendo "Panadería El Horno".
+- 🔴 **El Sheet todavía tiene los productos de EJEMPLO**, pero la carta ya
+  dice "Panadería Zahara". Por eso está en modo borrador (`noindex`): no
+  queremos que Google indexe precios inventados bajo el nombre de un negocio
+  real con 555 reseñas. Se arregla pegando `docs/carta-zahara-junio-2025.csv`
+  en el Sheet.
+- 🟡 **Los precios que tenemos son de junio de 2025** (~16 meses). Hay que
+  confirmarlos con el dueño antes de pegar un QR en las mesas.
 - 🟡 Falta el salto visual: GSAP, page curl con WebGL, micro-interacciones.
 
 ---
@@ -228,6 +233,48 @@ Sheet. El esquema híbrido queda validado de punta a punta.
 `X-Served-By: cache-bog-...-BOG` confirma que GitHub Pages sirve el sitio
 **desde un nodo en Bogotá**. La duda sobre la latencia en Colombia queda
 resuelta y, por ahora, no hay motivo para mudarse a Cloudflare.
+
+---
+
+### Sesión 5 — 9 de octubre de 2026 — *Llegan los datos reales del negocio*
+
+Julián pasó la ficha de Google Maps y fotos del tablero de la pared.
+
+**El negocio es Panadería Zahara**, Cra. 59 #132A-36, Bogotá. 4,5 ★ con 555
+reseñas, con domicilio. El letrero dice *Panadería · Desayunos · Pizzería ·
+Frutería*, así que es bastante más que una panadería y la carta va a tener
+que crecer.
+
+**Lo que se hizo**
+
+- Nombre y dirección reales en `src/config.js`.
+- `docs/carta-zahara-junio-2025.csv` con los 10 combos de desayuno leídos del
+  tablero. El nombre del archivo lleva la fecha a propósito: **esos precios
+  son de junio de 2025** y nadie debería olvidarlo.
+- `src/data/menu-respaldo.json` pasa a tener los productos reales, para que
+  no exista ningún escenario donde aparezcan productos inventados bajo el
+  nombre de Zahara.
+- **Modo borrador** (`BORRADOR` en `src/config.js`): mete `noindex, nofollow`
+  mientras el Sheet siga con datos de ejemplo. Zahara es un negocio real con
+  555 reseñas; que Google indexe precios inventados bajo su nombre sería un
+  problema de verdad, no un detalle. Se apaga con una línea.
+
+**Horario y teléfono NO se pusieron.** Google solo muestra "cierra a las
+10 p.m." (falta apertura y días) y un teléfono "12855192" que parece el fijo
+viejo de Bogotá, hoy `(601) 285 5192`. Es una inferencia, no un dato, así que
+quedan como marcador. `CLAUDE.md` es explícito en no inventar datos del
+negocio.
+
+**Dudas abiertas sobre el tablero** (hay que resolverlas con el dueño):
+
+| Combo | Qué se ve | Duda |
+|---|---|---|
+| 2 (Tamal) | `11.500` y `13.300` apilados | ¿Cuál rige? ¿O son dos variantes? |
+| 4 (Changua) | `13.300` y `14.300` apilados | Lo mismo |
+| 3 (Caldo) | Sticker `COSTILLA 14.000` / `PESCADO 15.000` | Resuelto: son dos variantes, quedaron como dos productos |
+
+Se tomó el valor de arriba en los dos casos dudosos, pero **está sin
+confirmar**.
 
 ---
 
