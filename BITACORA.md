@@ -265,16 +265,19 @@ viejo de Bogotá, hoy `(601) 285 5192`. Es una inferencia, no un dato, así que
 quedan como marcador. `CLAUDE.md` es explícito en no inventar datos del
 negocio.
 
-**Dudas abiertas sobre el tablero** (hay que resolverlas con el dueño):
+**Dudas del tablero, ya resueltas por Julián:**
 
-| Combo | Qué se ve | Duda |
+| Combo | Qué se veía | Resolución |
 |---|---|---|
-| 2 (Tamal) | `11.500` y `13.300` apilados | ¿Cuál rige? ¿O son dos variantes? |
-| 4 (Changua) | `13.300` y `14.300` apilados | Lo mismo |
-| 3 (Caldo) | Sticker `COSTILLA 14.000` / `PESCADO 15.000` | Resuelto: son dos variantes, quedaron como dos productos |
+| 2 (Tamal) | `11.500` y `13.300` apilados | Rige **13.300** (el más caro) |
+| 4 (Changua) | `13.300` y `14.300` apilados | Rige **14.300** (el más caro) |
+| 3 (Caldo) | Sticker `COSTILLA 14.000` / `PESCADO 15.000` | Son dos variantes → dos productos |
 
-Se tomó el valor de arriba en los dos casos dudosos, pero **está sin
-confirmar**.
+También confirmó que **los precios de junio de 2025 sirven tal cual**, que el
+horario es **6:00 a.m. – 10:00 p.m.**, y que **la panadería ya no tiene
+teléfono**: el número que sigue apareciendo en Google está desactualizado.
+El campo se quitó del código, no se dejó como marcador. ⚠️ Que a nadie se le
+ocurra "arreglarlo" volviéndolo a poner desde Google.
 
 ---
 

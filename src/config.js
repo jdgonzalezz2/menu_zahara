@@ -54,17 +54,15 @@ export const NEGOCIO = {
   // ✅ Confirmada en la ficha de Google Maps del negocio
   direccion: "Cra. 59 #132A-36, Bogotá",
 
-  // ⚠️ PENDIENTES. No los inventamos: van como marcador hasta confirmarlos.
+  // ✅ Confirmado por Julián
+  horario: "6:00 a.m. – 10:00 p.m.",
+
+  // ⚠️ NO agregar teléfono: Julián confirmó que ya NO tienen línea.
+  //    El número "12855192" que todavía aparece en Google está desactualizado.
+  //    Si algún día hay un WhatsApp para domicilios, va acá.
   //
-  //  - horario:  Google solo muestra "Cierra a las 10 p.m.". Falta la hora
-  //              de apertura y qué pasa los domingos y festivos.
-  //  - telefono: Google muestra "12855192", que parece el fijo de Bogotá en
-  //              formato viejo → hoy sería (601) 285 5192. HAY QUE
-  //              CONFIRMARLO con el dueño antes de publicarlo, y preguntar
-  //              si prefieren un WhatsApp para domicilios.
-  horario: "[Horario pendiente de confirmar]",
-  telefono: "[Teléfono pendiente de confirmar]",
-  instagram: "[@usuario pendiente]",
+  // El Instagram se omite mientras no sepamos si tienen. Un campo ausente
+  // simplemente no se dibuja en la contraportada.
 };
 
 /**
