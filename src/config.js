@@ -74,7 +74,9 @@ export const NEGOCIO = {
  * Google, y mientras los productos del Sheet sigan siendo los de ejemplo
  * sería feo que Google indexara precios inventados bajo su nombre.
  *
- * ➡️ Ponlo en false cuando el Sheet ya tenga los productos y precios reales
- *    confirmados por el dueño.
+ * ➡️ Ponlo en true si algún día hay que volver a meter datos de prueba.
+ *
+ * Apagado el 9 de octubre de 2026: el Sheet ya tiene los 11 combos reales
+ * con los precios que confirmó Julián.
  */
-export const BORRADOR = true;
+export const BORRADOR = false;
