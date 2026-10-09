@@ -151,12 +151,36 @@ test/                  ← pruebas del parser
 
 ## 📷 Cómo añadir fotos
 
-1. **Convierte la foto a WebP** con [Squoosh](https://squoosh.app/) (gratis).
-   Apunta a **menos de 80 KB** por foto.
-2. Guárdala en **`public/assets/`** con nombre sencillo, sin tildes ni
-   espacios: `pandebono.webp`.
-3. En el Google Sheet, escribe `pandebono.webp` en la columna **Foto**.
-4. `git push` de la foto. Listo.
+### ⚠️ Antes que nada: las fotos tienen que ser propias
+
+Las fotos de Google Maps **las tomaron los clientes**, no la panadería, y
+Google se las acredita a quien las subió. Usarlas en la carta del negocio
+—y más quitándoles el crédito— no es lo mismo que verlas en Maps.
+
+Lo correcto y además más fácil: que el dueño saque **sus propias fotos** con
+el celular. Un plato cerca de una ventana, sin flash, y listo. Van a quedar
+mejor que una captura de Maps, que ya viene comprimida dos veces.
+
+### El proceso
+
+1. Pon la foto donde sea (el Escritorio sirve) y corre:
+
+   ```bash
+   pip install pillow      # una sola vez
+   python scripts/preparar-foto.py  C:/Users/juli2/Desktop/combo1.jpg  combo-1
+   ```
+
+   El script hace todo solo: recorta al centro en 3:2, redimensiona a
+   900×600, busca la mejor calidad que quepa en **80 KB**, borra los
+   metadatos EXIF (que incluyen la ubicación GPS) y la guarda en
+   `public/assets/combo-1.webp`.
+
+   Con `--cuadrada` la deja 700×700 en vez de 3:2.
+
+2. En el Google Sheet, escribe **`combo-1.webp`** en la columna **Foto** de
+   ese producto.
+
+3. `git add . && git commit -m "Foto del combo 1" && git push`
 
 Las fotos se cargan solo cuando el cliente llega a esa página
 (`loading="lazy"`), así que no vuelven lenta la carta.
