@@ -15,7 +15,7 @@
  *
  * Instrucciones completas en README.md, sección "El Excel del dueño".
  */
-export const SHEET_ID = "";
+export const SHEET_ID = "1GRbr40yOgO5fw_qvo7ldxz-1wGOoTRGcm6GkXiZUIUI";
 
 /**
  * Nombre de la pestaña del Sheet donde están los productos.
