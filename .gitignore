@@ -1,0 +1,14 @@
+# Basura del sistema operativo
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Editores
+.vscode/
+.idea/
+
+# Python (por si se genera el QR en un entorno virtual)
+__pycache__/
+*.pyc
+.venv/
+venv/
