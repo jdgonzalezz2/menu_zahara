@@ -67,6 +67,16 @@ export const MAX_PRODUCTOS_POR_PAGINA = 6;
  * Se comparan sin tildes ni mayúsculas, así que "bebidas" encuentra
  * "Bebidas".
  */
+/**
+ * Imagen de cabecera por sección. Es la forma de aprovechar una foto buena
+ * que no corresponde a un producto concreto: en vez de forzarla a un
+ * renglón, encabeza la sección entera.
+ * La clave es el nombre de la sección tal como está en el Sheet.
+ */
+export const FOTOS_SECCION = {
+  "Bebidas calientes": "bebida-cafe.webp",
+};
+
 export const SECCIONES_COMPACTAS = [
   "Bebidas",
   "Bebidas calientes",
@@ -135,9 +145,13 @@ export const FOTOS = {
  * Google, y mientras los productos del Sheet sigan siendo los de ejemplo
  * sería feo que Google indexara precios inventados bajo su nombre.
  *
- * ➡️ Ponlo en true si algún día hay que volver a meter datos de prueba.
+ * ➡️ Ponlo en false cuando TODOS los precios sean los reales.
  *
- * Apagado el 9 de octubre de 2026: el Sheet ya tiene los 11 combos reales
- * con los precios que confirmó Julián.
+ * Reactivado el 9 de octubre de 2026: la carta pasó a ser una maqueta de
+ * presentación. Los 11 combos de desayuno llevan precios reales del tablero,
+ * pero panadería, bebidas y adicionales son PRECIOS DE MUESTRA. Mientras
+ * eso sea así, no queremos que Google los indexe bajo el nombre de un
+ * negocio real con 555 reseñas. La URL sigue funcionando igual para quien
+ * tenga el enlace.
  */
-export const BORRADOR = false;
+export const BORRADOR = true;

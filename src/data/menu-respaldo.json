@@ -71,6 +71,270 @@
           "etiqueta": ""
         }
       ]
+    },
+    {
+      "titulo": "Panadería",
+      "subtitulo": "",
+      "productos": [
+        {
+          "nombre": "Pandebono",
+          "precio": 3500,
+          "desc": "Recién salido del horno.",
+          "etiqueta": ""
+        },
+        {
+          "nombre": "Almojábana",
+          "precio": 4200,
+          "desc": "Con queso costeño.",
+          "etiqueta": ""
+        },
+        {
+          "nombre": "Pan de queso",
+          "precio": 3800,
+          "desc": "",
+          "etiqueta": ""
+        },
+        {
+          "nombre": "Buñuelo",
+          "precio": 2500,
+          "desc": "",
+          "etiqueta": ""
+        },
+        {
+          "nombre": "Mogolla integral",
+          "precio": 2800,
+          "desc": "",
+          "etiqueta": ""
+        },
+        {
+          "nombre": "Roscón con arequipe",
+          "precio": 5500,
+          "desc": "Relleno generoso.",
+          "etiqueta": ""
+        },
+        {
+          "nombre": "Croissant",
+          "precio": 4500,
+          "desc": "Hojaldre crujiente.",
+          "etiqueta": ""
+        },
+        {
+          "nombre": "Croissant de jamón y queso",
+          "precio": 6500,
+          "desc": "",
+          "etiqueta": ""
+        },
+        {
+          "nombre": "Palito de queso",
+          "precio": 4200,
+          "desc": "",
+          "etiqueta": ""
+        },
+        {
+          "nombre": "Pastel de pollo",
+          "precio": 6500,
+          "desc": "",
+          "etiqueta": ""
+        },
+        {
+          "nombre": "Pastel de carne",
+          "precio": 6500,
+          "desc": "",
+          "etiqueta": ""
+        },
+        {
+          "nombre": "Mantecada",
+          "precio": 3500,
+          "desc": "",
+          "etiqueta": ""
+        }
+      ]
+    },
+    {
+      "titulo": "Bebidas calientes",
+      "subtitulo": "",
+      "productos": [
+        {
+          "nombre": "Tinto",
+          "precio": 2500,
+          "desc": "Café negro de la casa.",
+          "etiqueta": ""
+        },
+        {
+          "nombre": "Tinto campesino",
+          "precio": 3000,
+          "desc": "Con panela.",
+          "etiqueta": ""
+        },
+        {
+          "nombre": "Café en leche",
+          "precio": 4500,
+          "desc": "El clásico perico.",
+          "etiqueta": ""
+        },
+        {
+          "nombre": "Café americano",
+          "precio": 4800,
+          "desc": "",
+          "etiqueta": ""
+        },
+        {
+          "nombre": "Capuchino",
+          "precio": 6500,
+          "desc": "",
+          "etiqueta": ""
+        },
+        {
+          "nombre": "Café latte",
+          "precio": 6800,
+          "desc": "",
+          "etiqueta": ""
+        },
+        {
+          "nombre": "Chocolate santafereño",
+          "precio": 6000,
+          "desc": "Espumoso, batido a mano.",
+          "etiqueta": ""
+        },
+        {
+          "nombre": "Chocolate con queso",
+          "precio": 7500,
+          "desc": "Con porción de queso campesino.",
+          "etiqueta": ""
+        },
+        {
+          "nombre": "Aguapanela con limón",
+          "precio": 3500,
+          "desc": "",
+          "etiqueta": ""
+        },
+        {
+          "nombre": "Aguapanela con queso",
+          "precio": 5500,
+          "desc": "",
+          "etiqueta": ""
+        },
+        {
+          "nombre": "Aromática",
+          "precio": 3800,
+          "desc": "Pregunta por las hierbas del día.",
+          "etiqueta": ""
+        },
+        {
+          "nombre": "Milo caliente",
+          "precio": 5000,
+          "desc": "",
+          "etiqueta": ""
+        },
+        {
+          "nombre": "Té",
+          "precio": 3500,
+          "desc": "",
+          "etiqueta": ""
+        }
+      ]
+    },
+    {
+      "titulo": "Bebidas frías",
+      "subtitulo": "",
+      "productos": [
+        {
+          "nombre": "Jugo natural en agua",
+          "precio": 6000,
+          "desc": "Pregunta por la fruta del día.",
+          "etiqueta": ""
+        },
+        {
+          "nombre": "Jugo natural en leche",
+          "precio": 7500,
+          "desc": "Pregunta por la fruta del día.",
+          "etiqueta": ""
+        },
+        {
+          "nombre": "Limonada natural",
+          "precio": 5500,
+          "desc": "",
+          "etiqueta": ""
+        },
+        {
+          "nombre": "Limonada de coco",
+          "precio": 8000,
+          "desc": "",
+          "etiqueta": ""
+        },
+        {
+          "nombre": "Avena fría",
+          "precio": 5000,
+          "desc": "",
+          "etiqueta": ""
+        },
+        {
+          "nombre": "Malteada",
+          "precio": 9000,
+          "desc": "",
+          "etiqueta": ""
+        },
+        {
+          "nombre": "Yogur con granola",
+          "precio": 7000,
+          "desc": "",
+          "etiqueta": ""
+        },
+        {
+          "nombre": "Gaseosa",
+          "precio": 4000,
+          "desc": "",
+          "etiqueta": ""
+        },
+        {
+          "nombre": "Agua",
+          "precio": 3000,
+          "desc": "",
+          "etiqueta": ""
+        }
+      ]
+    },
+    {
+      "titulo": "Adicionales",
+      "subtitulo": "",
+      "productos": [
+        {
+          "nombre": "Porción de queso",
+          "precio": 3000,
+          "desc": "",
+          "etiqueta": ""
+        },
+        {
+          "nombre": "Huevo adicional",
+          "precio": 2500,
+          "desc": "",
+          "etiqueta": ""
+        },
+        {
+          "nombre": "Arepa",
+          "precio": 2500,
+          "desc": "",
+          "etiqueta": ""
+        },
+        {
+          "nombre": "Porción de arequipe",
+          "precio": 2500,
+          "desc": "",
+          "etiqueta": ""
+        },
+        {
+          "nombre": "Mantequilla",
+          "precio": 1500,
+          "desc": "",
+          "etiqueta": ""
+        },
+        {
+          "nombre": "Mermelada",
+          "precio": 1500,
+          "desc": "",
+          "etiqueta": ""
+        }
+      ]
     }
   ]
 }

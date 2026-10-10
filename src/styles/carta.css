@@ -453,6 +453,23 @@ body {
   filter: drop-shadow(0 5px 9px var(--sombra));
 }
 
+/* ---- Imagen de cabecera de sección ---- */
+.sec-foto {
+  margin: 0 0 20px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px var(--sombra-foto);
+  background: var(--papel-2);
+}
+
+.sec-foto img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 21 / 9;
+  object-fit: cover;
+}
+
 /* ---- Tabla compacta: bebidas y adicionales ----
    Ponerle foto a cada renglón satura la página y no ayuda: el cliente ya
    sabe cómo se ve un tinto. Densa, de dos columnas, se lee de un vistazo. */
