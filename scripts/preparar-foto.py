@@ -7,14 +7,14 @@ Requisito (una sola vez):
 
 Uso:
     python scripts/preparar-foto.py  C:/ruta/a/la/foto.jpg  combo-1
-    python scripts/preparar-foto.py  foto.jpg  combo-1  --cuadrada
+    python scripts/preparar-foto.py  foto.jpg  combo-1  --ancha   (3:2)
 
 El segundo argumento es el nombre que va a quedar (sin extensión) y es el
 mismo que se escribe en la columna "Foto" del Google Sheet.
 
 Qué hace:
-  - Recorta al centro en proporción 3:2 (la que usa la carta).
-  - Redimensiona a 900x600, que se ve nítido hasta en pantallas retina.
+  - Recorta al centro en cuadrado (el formato que usa la carta).
+  - Redimensiona a 700x700, que se ve nítido hasta en pantallas retina.
   - Guarda en WebP buscando la calidad más alta que quepa en 80 KB.
   - Quita los metadatos EXIF (ubicación GPS, modelo del celular, etc.),
     que no tienen por qué acabar publicados.
@@ -27,7 +27,7 @@ from PIL import Image, ImageOps
 RAIZ = Path(__file__).resolve().parent.parent
 DESTINO = RAIZ / "public" / "assets"
 
-ANCHO, ALTO = 900, 600          # 3:2, el aspect-ratio que usa .item-photo
+ANCHO, ALTO = 700, 700          # cuadrado: el formato que usa .item-photo
 PESO_MAXIMO = 80 * 1024         # 80 KB: el presupuesto por foto
 CALIDADES = [82, 76, 70, 64, 58, 52, 45]
 
@@ -50,11 +50,11 @@ def recortar_centrado(img: Image.Image, proporcion: float) -> Image.Image:
     return img
 
 
-def preparar(origen: Path, nombre: str, cuadrada: bool = False) -> Path:
+def preparar(origen: Path, nombre: str, ancha: bool = False) -> Path:
     if not origen.exists():
         raise SystemExit(f"No encuentro el archivo: {origen}")
 
-    ancho, alto = (700, 700) if cuadrada else (ANCHO, ALTO)
+    ancho, alto = (900, 600) if ancha else (ANCHO, ALTO)
 
     img = Image.open(origen)
 
@@ -86,12 +86,12 @@ def preparar(origen: Path, nombre: str, cuadrada: bool = False) -> Path:
 
 if __name__ == "__main__":
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
-    cuadrada = "--cuadrada" in sys.argv
+    ancha = "--ancha" in sys.argv
 
     if len(args) < 2:
         raise SystemExit(
-            "Uso: python scripts/preparar-foto.py <foto> <nombre> [--cuadrada]\n"
+            "Uso: python scripts/preparar-foto.py <foto> <nombre> [--ancha]\n"
             "Ej:  python scripts/preparar-foto.py fotos/combo1.jpg combo-1"
         )
 
-    preparar(Path(args[0]), args[1], cuadrada)
+    preparar(Path(args[0]), args[1], ancha)

@@ -307,15 +307,32 @@ body {
   max-width: 42ch;
 }
 
+/* ---- Fotos de producto ----
+   Miniatura cuadrada al lado del texto. Se eligió así y no a todo el ancho
+   porque una foto grande por producto haría las páginas larguísimas, y la
+   gracia del flipbook es pasar páginas, no hacer scroll. */
+.item.con-foto {
+  display: grid;
+  grid-template-columns: 1fr 84px;
+  grid-template-areas:
+    "row   foto"
+    "desc  foto";
+  column-gap: 14px;
+  align-items: start;
+}
+
+.item.con-foto .item-row  { grid-area: row; }
+.item.con-foto .item-desc { grid-area: desc; }
+
 .item-photo {
+  grid-area: foto;
   display: block;
-  width: 100%;
-  height: auto;
-  aspect-ratio: 3 / 2;
+  width: 84px;
+  height: 84px;
   object-fit: cover;
-  border-radius: 8px;
-  margin: 10px 0 2px;
+  border-radius: 10px;
   background: var(--paper-2);
+  align-self: center;
 }
 
 /* ---- Etiquetas: nuevo / agotado ---- */

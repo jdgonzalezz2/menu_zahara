@@ -170,12 +170,19 @@ mejor que una captura de Maps, que ya viene comprimida dos veces.
    python scripts/preparar-foto.py  C:/Users/juli2/Desktop/combo1.jpg  combo-1
    ```
 
-   El script hace todo solo: recorta al centro en 3:2, redimensiona a
-   900×600, busca la mejor calidad que quepa en **80 KB**, borra los
+   El script hace todo solo: recorta al centro en **cuadrado**, redimensiona
+   a 700×700, busca la mejor calidad que quepa en **80 KB**, borra los
    metadatos EXIF (que incluyen la ubicación GPS) y la guarda en
    `public/assets/combo-1.webp`.
 
-   Con `--cuadrada` la deja 700×700 en vez de 3:2.
+   Cuadrado porque las fotos de comida cenitales casi siempre salen
+   verticales y un recorte 3:2 les corta el plato. Si alguna necesita ser
+   apaisada, `--ancha` la deja en 900×600.
+
+   En la carta se ve como una **miniatura de 84×84** al lado del nombre. Se
+   eligió así y no a todo el ancho porque una foto grande por producto haría
+   las páginas larguísimas, y la gracia del flipbook es pasar páginas, no
+   hacer scroll.
 
 2. En el Google Sheet, escribe **`combo-1.webp`** en la columna **Foto** de
    ese producto.
