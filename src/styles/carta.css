@@ -739,38 +739,12 @@ body {
 }
 
 /* ===========================================================================
-   8b. ENTRADA DEL CONTENIDO
-   Los renglones entran escalonados cuando la página llega. Es lo que hace
-   que la carta se sienta viva en vez de aparecer de golpe.
-   ======================================================================== */
-.page.is-current .item,
-.page.is-current .sec-head,
-.page.is-current .hero,
-.page.is-current .sec-foto {
-  animation: entrar .42s var(--curva) both;
-  animation-delay: calc(var(--i, 0) * 32ms + 90ms);
-}
-
-.page.is-current .sec-head { animation-delay: 40ms; }
-.page.is-current .hero,
-.page.is-current .sec-foto { animation-delay: 160ms; }
-
-@keyframes entrar {
-  from { opacity: 0; transform: translateY(9px); }
-  to   { opacity: 1; transform: none; }
-}
-
-/* ===========================================================================
    9. MOVIMIENTO REDUCIDO
    ======================================================================== */
 @media (prefers-reduced-motion: reduce) {
   :root { --flip: .001s; }
   .page { transition-duration: .001s; }
   .cover-pie .flecha { animation: none; }
-  .page.is-current .item,
-  .page.is-current .sec-head,
-  .page.is-current .hero,
-  .page.is-current .sec-foto { animation: none; }
   .dot::before, .arrow-btn { transition: none; }
 }
 

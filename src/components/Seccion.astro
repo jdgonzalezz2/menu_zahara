@@ -41,8 +41,8 @@ const kicker =
   )}
 
   <ul class:list={["items", { compacto: seccion.compacta }]}>
-    {seccion.productos.map((producto, i) => (
-      <Producto producto={producto} fotos={FOTOS} indice={i} />
+    {seccion.productos.map((producto) => (
+      <Producto producto={producto} fotos={FOTOS} />
     ))}
   </ul>
 

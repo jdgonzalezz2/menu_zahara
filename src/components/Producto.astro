@@ -6,7 +6,7 @@
 import { formatearPrecio } from "../lib/precio.js";
 import { rutaDeAsset } from "../lib/rutas.js";
 
-const { producto, fotos = {}, indice = 0 } = Astro.props;
+const { producto, fotos = {} } = Astro.props;
 
 // La columna Foto del Sheet manda; si está vacía, se busca en el mapa
 // de src/config.js.
@@ -24,7 +24,6 @@ const precio = agotado ? null : formatearPrecio(producto.precio);
 <li
   class:list={["item", { agotado, "con-foto": !!foto }]}
   data-producto={producto.nombre}
-  style={`--i:${indice}`}
 >
   <div class="item-texto">
     <div class="item-row">

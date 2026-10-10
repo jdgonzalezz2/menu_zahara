@@ -310,16 +310,24 @@ async function refrescarEnVivo() {
 
   if (!menu?.paginas?.length) return;
 
-  // Aplana a un índice por nombre de producto
+  // Igual que en el build: se compara sin tildes, mayúsculas ni espacios
+  // de más, para que una celda escrita a mano no rompa el enlace.
+  const normalizar = (n) =>
+    String(n ?? "").trim().toLowerCase()
+      .normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/\s+/g, " ");
+
   const frescos = new Map();
   for (const seccion of menu.paginas) {
-    for (const p of seccion.productos) frescos.set(p.nombre, p);
+    for (const p of seccion.productos) {
+      const clave = normalizar(p.nombre);
+      if (clave && !frescos.has(clave)) frescos.set(clave, p);
+    }
   }
 
   let cambios = 0;
 
   for (const li of document.querySelectorAll(".item[data-producto]")) {
-    const fresco = frescos.get(li.dataset.producto);
+    const fresco = frescos.get(normalizar(li.dataset.producto));
     if (!fresco) continue;
     if (actualizarFila(li, fresco)) cambios++;
   }

@@ -73,44 +73,50 @@ A los dos minutos la carta ya está leyendo del Sheet.
 
 ## 📊 Cómo el dueño cambia precios y marca agotados
 
-**Él solo abre el Google Sheet** (desde el computador o desde la app de Google
-Sheets en el celular) y edita. Nada más.
+**Él solo abre el Google Sheet** (desde el computador o desde la app en el
+celular) y edita. Nada más.
 
-La hoja tiene estas columnas:
+> ### ⚠️ Lo que el Sheet puede y no puede hacer
+>
+> El Sheet manda sobre **el precio** y sobre **si algo se agotó**. Eso es lo
+> que cambia a diario y tiene que poder cambiarse sin tocar código.
+>
+> El Sheet **NO** agrega, quita ni renombra productos. La carta —qué
+> productos hay, cómo se llaman, qué incluyen y en qué orden van— vive en
+> [`src/data/catalogo.json`](src/data/catalogo.json). Una fila nueva en el
+> Sheet simplemente **se ignora**.
+>
+> Es a propósito: agregar un producto es una decisión de carta, y una carta
+> no debería rediseñarse sola porque alguien escribió una fila.
+>
+> Para agregar o quitar productos, se le pide a Julián.
 
-| Seccion | Producto | Precio | Descripcion | Estado | Foto |
-|---|---|---|---|---|---|
-| Panadería | Pandebono | 2500 | Clásico y suave. | | |
-| Panadería | Roscón | 4500 | Con arequipe. | nuevo | |
-| Desayunos | Tamal | 10000 | Fin de semana. | agotado | |
+El enlace entre las dos cosas es **el nombre del producto**, que tiene que
+coincidir con el del catálogo. Se comparan sin distinguir tildes, mayúsculas
+ni espacios de más, así que `aromatica` encuentra `Aromática`. Si un nombre
+no coincide con nada, el build lo avisa en el registro.
 
-- **Seccion** → en qué página sale. Si escribe una sección nueva, se crea
-  sola. El orden de las páginas es el orden en que aparecen las secciones.
-- **Producto** → el nombre. Si esta celda está vacía, la fila se ignora.
-- **Precio** → el número. Da igual si escribe `2500`, `2.500` o `$ 2.500`:
-  la carta lo entiende. Es el **precio final con IVA incluido**, como exige
-  la ley en Colombia.
-- **Descripcion** → opcional.
-- **Estado** → se deja vacío, o se escribe `nuevo` o `agotado`.
-  Da igual mayúsculas o minúsculas.
-  - `agotado` → el producto sale en gris, tachado y **sin precio**.
-  - `nuevo` → sale una insignia naranja.
-- **Foto** → opcional, el nombre del archivo WebP (ver más abajo).
+| Columna | ¿Sirve? |
+|---|---|
+| **Producto** | ✅ Es la llave. Tiene que coincidir con el catálogo |
+| **Precio** | ✅ El número. Da igual `2500`, `2.500` o `$ 2.500` |
+| **Estado** | ✅ Vacío, `nuevo` o `agotado` |
+| Seccion | ❌ Se ignora: la sección la define el catálogo |
+| Descripcion | ❌ Se ignora |
+| Foto | ❌ Se ignora: las fotos van en `src/config.js` |
 
-**Para agregar un producto:** escribe una fila nueva.
-**Para quitarlo:** borra la fila.
+- `agotado` → el producto sale en gris, tachado y **sin precio**.
+- `nuevo` → sale una insignia naranja.
 
 ### ¿En cuánto se ve el cambio?
 
 - **Casi al instante** para el cliente que abra la carta después del cambio.
-  La carta pide los datos frescos por detrás cada vez que alguien la abre.
-- **Cada 15 minutos** se reconstruye el sitio completo con los datos nuevos.
+  La carta pide los precios frescos por detrás cada vez que alguien la abre.
+- **Cada 15 minutos** se reconstruye el sitio completo.
 
 Las dos cosas funcionan a la vez, a propósito: si Google falla o el cliente
-tiene mala señal, la carta igual se ve, con los últimos datos horneados.
+tiene mala señal, la carta igual se ve con los últimos precios horneados.
 **Nunca queda en blanco.**
-
----
 
 ## 💻 Para Julián: trabajar en el código
 

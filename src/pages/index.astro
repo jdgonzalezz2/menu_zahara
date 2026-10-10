@@ -22,21 +22,22 @@ import Contraportada from "../components/Contraportada.astro";
 import {
   SHEET_ID, SHEET_HOJA, SHEET_GID, NEGOCIO, TIMEOUT_EN_VIVO, BORRADOR,
   MAX_PRODUCTOS_POR_PAGINA, SECCIONES_COMPACTAS, MAX_COMPACTO,
-  COMPLETAR_CON_RESPALDO,
 } from "../config.js";
 import { traerMenu, urlDelSheet } from "../lib/sheet.js";
 import { paginarSecciones, nombreDePagina } from "../lib/paginar.js";
-import { combinarSecciones } from "../lib/combinar.js";
-import respaldo from "../data/menu-respaldo.json";
+import { aplicarPreciosDelSheet } from "../lib/precios.js";
+import catalogo from "../data/catalogo.json";
 
-let menu = respaldo;
-let origen = "datos de ejemplo (no hay SHEET_ID configurado)";
+// El catálogo es la carta. El Sheet solo trae precios y agotados.
+let delSheet = [];
+let origen = "solo el catálogo (no hay SHEET_ID configurado)";
 
 if (SHEET_ID) {
   try {
     // En el build sí podemos esperar: nadie está mirando la pantalla.
-    menu = await traerMenu(SHEET_ID, SHEET_HOJA, { timeout: 15000, gid: SHEET_GID });
-    origen = `Google Sheet (${menu.paginas.length} secciones)`;
+    const leido = await traerMenu(SHEET_ID, SHEET_HOJA, { timeout: 15000, gid: SHEET_GID });
+    delSheet = leido.paginas;
+    origen = "catálogo + precios del Google Sheet";
   } catch (error) {
     // Decisión a propósito: si hay Sheet configurado pero no se pudo leer,
     // reventamos el build en vez de publicar datos viejos en silencio.
@@ -52,23 +53,22 @@ if (SHEET_ID) {
   }
 }
 
-// Mientras al Sheet le falten secciones, se completan con el catálogo
-// local para que la maqueta se vea entera. El Sheet siempre manda.
-let secciones = menu.paginas;
+const { paginas: secciones, aplicados, ignorados } = aplicarPreciosDelSheet(
+  catalogo.paginas,
+  delSheet
+);
 
-if (COMPLETAR_CON_RESPALDO) {
-  secciones = combinarSecciones(menu.paginas, respaldo.paginas);
-
-  const rellenadas = secciones.filter((s) => s.origen === "respaldo");
-  if (rellenadas.length) {
-    console.log(
-      `[carta] ${rellenadas.length} sección(es) completadas desde el respaldo: ` +
-        rellenadas.map((s) => s.titulo).join(", ")
+console.log(`[carta] ${origen}`);
+if (SHEET_ID) {
+  console.log(`[carta] ${aplicados} precio(s) tomados del Sheet`);
+  if (ignorados.length) {
+    // Casi siempre es un nombre mal escrito en el Sheet
+    console.warn(
+      `[carta] ⚠️  ${ignorados.length} fila(s) del Sheet no corresponden a ` +
+        `ningún producto del catálogo y se ignoraron: ${ignorados.join(", ")}`
     );
   }
 }
-
-console.log(`[carta] Origen de los datos: ${origen}`);
 
 // Las secciones largas se parten en varias páginas, para que el cliente
 // pase páginas en vez de hacer scroll.
