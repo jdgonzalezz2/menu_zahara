@@ -87,7 +87,15 @@ const configEnVivo = SHEET_ID
       data-titulo={nombre}
     >
       <div class="face front">
-        {i === 0 && <Portada negocio={NEGOCIO} />}
+        {i === 0 && (
+          <Portada
+            negocio={NEGOCIO}
+            titulo={NEGOCIO.titulo}
+            lema={NEGOCIO.lema}
+            foto={NEGOCIO.fotoPortada}
+            base={import.meta.env.BASE_URL}
+          />
+        )}
         {i > 0 && i < total - 1 && (
           <Seccion seccion={paginasDeCarta[i - 1]} />
         )}

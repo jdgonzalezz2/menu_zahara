@@ -63,7 +63,17 @@ export const MAX_PRODUCTOS_POR_PAGINA = 6;
    ---------------------------------------------------------------------- */
 export const NEGOCIO = {
   nombre: "Panadería Zahara",
-  lema: "Panadería · Desayunos · Pizzería · Frutería",
+
+  // Título y lema de la portada.
+  titulo: "Menú de Desayunos",
+  lema: "Recién horneado, preparado con cariño",
+
+  /**
+   * Fotografía principal de la portada. Es la imagen que más vende, así que
+   * va grande y se carga de una (no lazy): es lo primero que ve el cliente.
+   * Déjala en "" si no quieres foto en la portada.
+   */
+  fotoPortada: "croissant-tinto.webp",
 
   // ✅ Confirmada en la ficha de Google Maps del negocio
   direccion: "Cra. 59 #132A-36, Bogotá",

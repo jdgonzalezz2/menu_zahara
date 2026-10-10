@@ -1,16 +1,46 @@
 ---
-/** Portada de la carta. */
-const { negocio } = Astro.props;
+/**
+ * Portada: marca, título, lema y la fotografía principal.
+ *
+ * El orden de lectura está pensado para que el cliente, que acaba de
+ * escanear un QR en la mesa, entienda en un segundo dónde está y qué va a
+ * ver: marca → qué es esto → una foto que da hambre.
+ */
+import Espiga from "./Espiga.astro";
+import { rutaDeAsset } from "../lib/rutas.js";
+
+const { negocio, titulo, lema, foto, base } = Astro.props;
 ---
 
 <div class="cover">
-  <p class="cover-kicker">Carta</p>
-  <h1 class="cover-name">{negocio.nombre}</h1>
-  <hr class="cover-rule" />
-  {negocio.lema && <p class="cover-lema">{negocio.lema}</p>}
+  {/* Espacio reservado para el logo. Cuando exista, reemplaza este recuadro. */}
+  <div class="logo-slot" aria-hidden="true">
+    <Espiga />
+  </div>
 
-  <p class="cover-hint">
+  <p class="cover-marca">{negocio.nombre}</p>
+
+  <div class="filete" aria-hidden="true"><Espiga /></div>
+
+  <h1 class="cover-titulo">{titulo}</h1>
+
+  {lema && <p class="cover-lema">{lema}</p>}
+
+  {foto && (
+    <figure class="hero">
+      <img
+        src={rutaDeAsset(base, foto)}
+        alt="Croissant recién horneado con un tinto, en Panadería Zahara"
+        width="700"
+        height="700"
+        fetchpriority="high"
+        decoding="async"
+      />
+    </figure>
+  )}
+
+  <p class="cover-pie">
     <span>Desliza para pasar la página</span>
-    <span class="arrow">›</span>
+    <span class="flecha">›</span>
   </p>
 </div>

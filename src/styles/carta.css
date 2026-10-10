@@ -1,47 +1,57 @@
 /* ============================================================================
-   ESTILOS DE LA CARTA
-   Viene de la v1 (index.html) sin cambios de fondo: ya estaba verificado.
-   Los tokens de color viven en :root y se redefinen para el tema oscuro.
+   SISTEMA VISUAL DE LA CARTA — Panadería Zahara
+
+   Dirección de arte: cálido, artesanal y sofisticado. Papel crema, tinta
+   espresso, acentos en terracota y dorado suave. Serif con carácter para
+   los títulos, sans muy legible para producto y precio.
+
+   Todo el color vive en tokens en :root y se redefine para el tema oscuro.
    ========================================================================== */
 
 /* ===========================================================================
-   1. TOKENS DE COLOR
-   Todos los colores viven acá. El set oscuro se redefine más abajo.
+   1. TOKENS
    ======================================================================== */
 :root {
   color-scheme: light dark;
 
-  --paper:      #FBF6EC;   /* fondo de la página / del body */
-  --paper-2:    #F4EBDB;   /* fondo de recuadros */
-  --ink:        #241B14;   /* texto principal */
-  --ink-soft:   #5B4B3E;   /* descripciones */
-  --ink-faint:  #8A7867;   /* texto terciario, notas */
-  --accent:     #A8441F;   /* terracota: precios, detalles */
-  --accent-ink: #FFF6EE;   /* texto encima del acento */
-  --accent-bg:  #EADBCB;   /* fondo suave del acento */
-  --rule:       #D9C9B4;   /* líneas y bordes */
-  --spine:      rgba(36, 27, 20, .13);  /* sombra del lomo */
-  --shadow:     rgba(36, 27, 20, .22);
-  --focus:      #0B5FA5;   /* anillo de foco */
+  /* --- Color --- */
+  --papel:       #FDFAF4;   /* blanco cálido: fondo de página */
+  --papel-2:     #F5EEE1;   /* beige panadería: recuadros */
+  --papel-3:     #EFE5D4;   /* un paso más: bordes de foto, placeholders */
+  --tinta:       #2B1D14;   /* café espresso: texto principal */
+  --tinta-media: #6B5444;   /* descripciones */
+  --tinta-tenue: #9A8571;   /* notas, kickers */
+  --acento:      #A14A22;   /* terracota: precios */
+  --acento-tinta:#FFF6EE;   /* texto sobre terracota */
+  --dorado:      #B98430;   /* dorado suave: filetes y detalles */
+  --linea:       #E2D5C0;   /* hairlines */
+  --lomo:        rgba(43, 29, 20, .12);
+  --sombra:      rgba(43, 29, 20, .16);
+  --sombra-foto: rgba(43, 29, 20, .22);
+  --foco:        #0B5FA5;
 
-  --flip-time:  .62s;
-  --flip-ease:  cubic-bezier(.22, .72, .26, 1);
+  /* --- Ritmo --- */
+  --margen: 24px;           /* margen lateral, constante en toda la carta */
+  --flip: .62s;
+  --curva: cubic-bezier(.22, .72, .26, 1);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --paper:      #171310;
-    --paper-2:    #221A15;
-    --ink:        #F3E8DB;
-    --ink-soft:   #C5B4A3;
-    --ink-faint:  #93826F;
-    --accent:     #E79163;
-    --accent-ink: #1C1309;
-    --accent-bg:  #342419;
-    --rule:       #3C2F26;
-    --spine:      rgba(0, 0, 0, .45);
-    --shadow:     rgba(0, 0, 0, .55);
-    --focus:      #7FC4FF;
+    --papel:       #14100D;
+    --papel-2:     #1E1813;
+    --papel-3:     #281F18;
+    --tinta:       #F5EBDD;
+    --tinta-media: #C9B7A3;
+    --tinta-tenue: #93806C;
+    --acento:      #E89265;
+    --acento-tinta:#1C1309;
+    --dorado:      #D9A867;
+    --linea:       #392C22;
+    --lomo:        rgba(0, 0, 0, .5);
+    --sombra:      rgba(0, 0, 0, .55);
+    --sombra-foto: rgba(0, 0, 0, .6);
+    --foco:        #7FC4FF;
   }
 }
 
@@ -58,8 +68,8 @@ html, body {
 }
 
 body {
-  background: var(--paper);    /* fondo explícito desde token */
-  color: var(--ink);
+  background: var(--papel);
+  color: var(--tinta);
   font-family: "Karla", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   font-size: 16px;
   line-height: 1.5;
@@ -68,9 +78,8 @@ body {
   overscroll-behavior: none;
 }
 
-/* Foco visible y consistente en todos los controles */
 :focus-visible {
-  outline: 3px solid var(--focus);
+  outline: 3px solid var(--foco);
   outline-offset: 2px;
   border-radius: 4px;
 }
@@ -82,65 +91,73 @@ body {
   overflow: hidden; white-space: nowrap;
 }
 
+/* La espiga de trigo: el motivo gráfico de la marca.
+   Hereda el color de donde se use, así funciona en los dos temas. */
+.espiga {
+  display: block;
+  width: auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: .85;
+}
+
 /* ===========================================================================
-   3. ESCENARIO DEL LIBRO
+   3. EL LIBRO
    ======================================================================== */
 .stage {
   position: fixed;
   inset: 0;
   display: grid;
   place-items: center;
-  padding: 0;
-  touch-action: pan-y;         /* deja scroll vertical, nos quedamos el horizontal */
-  background: var(--paper);
+  touch-action: pan-y;
+  background: var(--papel);
 }
 
 .book {
   position: relative;
   width: 100%;
   height: 100%;
-  max-width: 480px;            /* diseñado para ~400px de ancho */
+  max-width: 480px;
 
   /* La perspectiva va acá, en el padre de las hojas, para que el punto de
-     fuga quede en el lomo del libro y no en el borde de la pantalla.
-     OJO: nada de transform-style: preserve-3d en este nivel — crearía un
-     contexto 3D donde los hijos se ordenan por posición y se ignora el
-     z-index, que es justo con lo que apilamos las hojas. */
+     fuga quede en el lomo. OJO: nada de transform-style: preserve-3d en
+     este nivel — crearía un contexto 3D donde se ignora el z-index, que es
+     justo con lo que apilamos las hojas. */
   perspective: 1600px;
   perspective-origin: 0% 50%;
 }
 
-/* ---- Cada página ---- */
 .page {
   position: absolute;
   inset: 0;
-  transform-origin: left center;   /* el lomo está a la izquierda */
+  transform-origin: left center;
   transform-style: preserve-3d;
-  transition: transform var(--flip-time) var(--flip-ease);
+  transition: transform var(--flip) var(--curva);
   will-change: transform;
   pointer-events: none;
 }
 
 .page.is-current { pointer-events: auto; }
-
-/* Una página ya pasada queda girada 180° sobre el lomo */
 .page.flipped { transform: rotateY(-180deg); }
+/* El z-index de la hoja que gira lo pone el JS: escribe estilo inline y el
+   inline le gana siempre a esta hoja de estilos. */
 
-/* Mientras gira, la página va por encima de todas.
-   El z-index se lo pone el JS (inline), porque el inline le gana a esta hoja
-   de estilos; acá lo dejamos documentado nada más. */
-
-/* ---- Las dos caras de la página ---- */
 .face {
   position: absolute;
   inset: 0;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  background: var(--paper);
+  background: var(--papel);
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
-  padding: calc(28px + env(safe-area-inset-top)) 22px calc(104px + env(safe-area-inset-bottom));
+  padding:
+    calc(30px + env(safe-area-inset-top))
+    var(--margen)
+    calc(104px + env(safe-area-inset-bottom));
 }
 
 /* Sombra pegada al lomo: es lo que hace que parezca un libro */
@@ -148,173 +165,204 @@ body {
   content: "";
   position: absolute;
   top: 0; left: 0; bottom: 0;
-  width: 30px;
-  background: linear-gradient(to right, var(--spine), transparent);
+  width: 32px;
+  background: linear-gradient(to right, var(--lomo), transparent);
   pointer-events: none;
+  z-index: 2;
 }
 
 .face.front { transform: rotateY(0deg); }
-.face.back  {
-  transform: rotateY(180deg);
-  background: var(--paper-2);   /* el revés del papel */
-}
+.face.back  { transform: rotateY(180deg); background: var(--papel-2); }
 
 /* ===========================================================================
-   4. CONTENIDO DE LAS PÁGINAS
+   4. PORTADA
    ======================================================================== */
-
-/* ---- Portada ---- */
 .cover {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   text-align: center;
-  min-height: 100%;
-  gap: 18px;
+
+  /* height, NO min-height: con min-height el contenedor crece hasta el
+     tamaño natural de la foto (700 px) en vez de dejarla encoger, y la
+     portada se sale de la pantalla. */
+  height: 100%;
 }
 
-.cover-rule {
-  width: 54px; height: 2px;
-  background: var(--accent);
-  border: 0;
+/* Espacio reservado para el logo. Cuando llegue, reemplaza este recuadro. */
+.logo-slot {
+  width: 64px;
+  height: 64px;
+  border: 1px dashed var(--linea);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: var(--tinta-tenue);
+  margin-bottom: 18px;
+  flex: none;
 }
 
-.cover-kicker {
-  font-size: .76rem;
-  letter-spacing: .22em;
+.logo-slot .espiga { height: 30px; }
+
+.cover-marca {
+  font-size: .74rem;
+  font-weight: 700;
+  letter-spacing: .3em;
   text-transform: uppercase;
-  color: var(--ink-faint);
-  margin: 0;
+  color: var(--tinta-media);
+  margin: 0 0 14px;
+  padding-left: .3em;        /* compensa el letter-spacing del último signo */
 }
 
-.cover-name {
+/* Filete con espiga al centro */
+.filete {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 190px;
+  color: var(--dorado);
+  margin: 0 0 16px;
+}
+
+.filete::before,
+.filete::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: currentColor;
+  opacity: .55;
+}
+
+.filete .espiga { height: 24px; }
+
+.cover-titulo {
   font-family: "Fraunces", Georgia, "Times New Roman", serif;
   font-weight: 600;
-  font-size: clamp(2.3rem, 13vw, 3.4rem);
-  line-height: 1.02;
+  font-variation-settings: "opsz" 120, "SOFT" 30;
+  font-size: clamp(2.5rem, 14vw, 3.5rem);
+  line-height: .96;
+  letter-spacing: -.015em;
   margin: 0;
-  color: var(--ink);
+  color: var(--tinta);
   text-wrap: balance;
 }
 
 .cover-lema {
   font-family: "Fraunces", Georgia, serif;
   font-style: italic;
-  font-size: 1.06rem;
-  color: var(--ink-soft);
-  margin: 0;
-  max-width: 24ch;
+  font-weight: 400;
+  font-size: 1.02rem;
+  color: var(--tinta-media);
+  margin: 12px 0 0;
+  max-width: 26ch;
 }
 
-.cover-hint {
-  margin-top: 14px;
-  font-size: .82rem;
-  color: var(--ink-faint);
+/* Foto principal de portada */
+/* La foto se estira o se encoge para que la portada SIEMPRE quepa en una
+   pantalla, sin importar el alto del celular. En uno pequeño queda una
+   franja; en uno grande, casi cuadrada. */
+.hero {
+  flex: 1 1 auto;
+  min-height: 110px;
+  width: 100%;
+  margin: 20px 0 0;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 10px 28px var(--sombra-foto);
+  background: var(--papel-2);
+}
+
+.hero img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cover-pie {
+  flex: none;
+  padding-top: 18px;
   display: flex;
   align-items: center;
   gap: 8px;
+  font-size: .8rem;
+  color: var(--tinta-tenue);
 }
 
-.cover-hint .arrow { animation: nudge 1.8s ease-in-out infinite; }
+.cover-pie .flecha { animation: empujon 1.8s ease-in-out infinite; }
 
-@keyframes nudge {
+@keyframes empujon {
   0%, 100% { transform: translateX(0); }
   50%      { transform: translateX(5px); }
 }
 
-/* ---- Encabezado de sección ---- */
-.sec-head { margin: 0 0 20px; }
+/* ===========================================================================
+   5. ENCABEZADO DE SECCIÓN
+   ======================================================================== */
+.sec-head {
+  margin: 0 0 22px;
+}
 
 .sec-kicker {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: .72rem;
-  letter-spacing: .2em;
+  gap: 9px;
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .22em;
   text-transform: uppercase;
-  color: var(--ink-faint);
-  margin: 0 0 8px;
+  color: var(--tinta-tenue);
+  margin: 0 0 10px;
+}
+
+.sec-kicker .espiga {
+  height: 18px;
+  color: var(--dorado);
+  flex: none;
 }
 
 .sec-kicker::after {
   content: "";
   flex: 1;
   height: 1px;
-  background: var(--rule);
+  background: var(--linea);
 }
 
 .sec-title {
   font-family: "Fraunces", Georgia, serif;
   font-weight: 600;
-  font-size: clamp(1.9rem, 9vw, 2.5rem);
-  line-height: 1.06;
+  font-variation-settings: "opsz" 110, "SOFT" 30;
+  font-size: clamp(2rem, 9.5vw, 2.6rem);
+  line-height: 1.02;
+  letter-spacing: -.012em;
   margin: 0;
-  color: var(--ink);
+  color: var(--tinta);
 }
 
 .sec-sub {
   font-family: "Fraunces", Georgia, serif;
   font-style: italic;
-  font-size: .98rem;
-  color: var(--ink-soft);
-  margin: 4px 0 0;
+  font-size: .97rem;
+  color: var(--tinta-media);
+  margin: 6px 0 0;
 }
 
-/* ---- Lista de productos ---- */
+/* ===========================================================================
+   6. PRODUCTOS
+   ======================================================================== */
 .items { list-style: none; margin: 0; padding: 0; }
 
 .item {
-  padding: 13px 0;
-  border-bottom: 1px solid var(--rule);
+  padding: 15px 0;
+  border-bottom: 1px solid var(--linea);
 }
 
 .item:last-child { border-bottom: 0; }
 
-/* Fila nombre ····· precio (puntitos clásicos de carta) */
-.item-row {
-  display: flex;
-  align-items: baseline;
-  gap: 6px;
-}
-
-.item-name {
-  font-weight: 700;
-  font-size: 1.02rem;
-  color: var(--ink);
-}
-
-.item-dots {
-  flex: 1;
-  border-bottom: 1px dotted var(--rule);
-  transform: translateY(-4px);
-  min-width: 14px;
-}
-
-.item-price {
-  font-family: "Fraunces", Georgia, serif;
-  font-weight: 600;
-  font-size: 1.02rem;
-  color: var(--accent);
-  white-space: nowrap;
-  font-variant-numeric: tabular-nums;
-}
-
-.item-desc {
-  margin: 4px 0 0;
-  font-size: .88rem;
-  color: var(--ink-soft);
-  max-width: 42ch;
-}
-
-/* ---- Fotos de producto ----
-   Miniatura cuadrada al lado del texto. Se eligió así y no a todo el ancho
-   porque una foto grande por producto haría las páginas larguísimas, y la
-   gracia del flipbook es pasar páginas, no hacer scroll. */
-/* El texto va envuelto en .item-texto para poder centrarlo como un bloque
-   contra la miniatura. Con grid no salía: la foto abarcaba las dos filas,
-   cada una crecía a la mitad de la altura y quedaba un hueco entre el
-   nombre y la descripción. */
+/* Con foto: el texto se agrupa y se centra contra la miniatura.
+   Con grid no salía: la foto abarcaba las dos filas, cada una crecía a la
+   mitad de la altura y quedaba un hueco entre el nombre y la descripción. */
 .item.con-foto {
   display: flex;
   align-items: center;
@@ -323,24 +371,63 @@ body {
 
 .item.con-foto .item-texto {
   flex: 1;
-  min-width: 0;        /* deja que el texto largo se ajuste en vez de desbordar */
+  min-width: 0;             /* deja que el texto largo se ajuste */
+}
+
+/* Fila nombre ····· precio */
+.item-row {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+}
+
+.item-name {
+  font-weight: 700;
+  font-size: 1.01rem;
+  line-height: 1.3;
+  color: var(--tinta);
+}
+
+.item-dots {
+  flex: 1;
+  border-bottom: 1px dotted var(--linea);
+  transform: translateY(-4px);
+  min-width: 12px;
+}
+
+.item-price {
+  font-family: "Fraunces", Georgia, serif;
+  font-weight: 600;
+  font-variation-settings: "opsz" 24;
+  font-size: 1.04rem;
+  color: var(--acento);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.item-desc {
+  margin: 5px 0 0;
+  font-size: .875rem;
+  line-height: 1.45;
+  color: var(--tinta-media);
+  max-width: 44ch;
 }
 
 .item-photo {
   flex: none;
   display: block;
-  width: 84px;
-  height: 84px;
+  width: 88px;
+  height: 88px;
   object-fit: cover;
-  border-radius: 10px;
-  background: var(--paper-2);
-  align-self: center;
+  border-radius: 12px;
+  background: var(--papel-2);
+  box-shadow: 0 3px 10px var(--sombra);
 }
 
-/* ---- Etiquetas: nuevo / agotado ---- */
+/* ---- Etiquetas ---- */
 .tag {
   display: inline-block;
-  font-size: .62rem;
+  font-size: .61rem;
   font-weight: 700;
   letter-spacing: .13em;
   text-transform: uppercase;
@@ -351,73 +438,85 @@ body {
   white-space: nowrap;
 }
 
-.tag-nuevo   { background: var(--accent);    color: var(--accent-ink); }
-.tag-agotado { background: transparent;      color: var(--ink-faint); border: 1px solid var(--rule); }
+.tag-nuevo   { background: var(--acento); color: var(--acento-tinta); }
+.tag-agotado { background: transparent; color: var(--tinta-tenue); border: 1px solid var(--linea); }
 
-/* Producto agotado: atenuado y sin precio */
+/* Agotado: atenuado y sin precio */
 .item.agotado .item-name,
-.item.agotado .item-desc { color: var(--ink-faint); }
+.item.agotado .item-desc { color: var(--tinta-tenue); }
 .item.agotado .item-name { text-decoration: line-through; text-decoration-thickness: 1px; }
-.item.agotado .item-photo { opacity: .45; filter: saturate(.4); }
+.item.agotado .item-photo { opacity: .4; filter: saturate(.3); }
 
-/* ---- Nota al pie de cada página de carta ---- */
+/* ---- Pie de página de carta ---- */
 .page-note {
-  margin: 22px 0 0;
+  margin: 26px 0 0;
   font-size: .72rem;
-  color: var(--ink-faint);
+  letter-spacing: .04em;
+  color: var(--tinta-tenue);
   text-align: center;
 }
 
-/* ---- Contraportada ---- */
-.back-page { text-align: center; }
+/* ===========================================================================
+   7. CONTRAPORTADA
+   ======================================================================== */
+.back-page {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100%;
+}
 
-.info-block { margin: 0 0 18px; }
+.back-page .filete { margin-top: 4px; }
+
+.info-block { margin: 0 0 20px; }
 
 .info-label {
-  font-size: .68rem;
-  letter-spacing: .2em;
+  font-size: .67rem;
+  font-weight: 700;
+  letter-spacing: .22em;
   text-transform: uppercase;
-  color: var(--ink-faint);
-  margin: 0 0 4px;
+  color: var(--tinta-tenue);
+  margin: 0 0 5px;
 }
 
 .info-value {
   font-family: "Fraunces", Georgia, serif;
-  font-size: 1.04rem;
-  color: var(--ink);
+  font-size: 1.05rem;
+  color: var(--tinta);
   margin: 0;
 }
 
-/* Recuadro para pegar el QR de domicilios / redes */
 .qr-slot {
-  width: 148px;
-  height: 148px;
-  margin: 6px auto 10px;
-  border: 2px dashed var(--rule);
-  border-radius: 12px;
+  width: 150px;
+  height: 150px;
+  margin: 6px auto 0;
+  border: 2px dashed var(--linea);
+  border-radius: 14px;
   display: grid;
   place-items: center;
-  padding: 10px;
-  background: var(--paper-2);
-  color: var(--ink-faint);
+  padding: 12px;
+  background: var(--papel-2);
+  color: var(--tinta-tenue);
   font-size: .72rem;
   line-height: 1.35;
 }
 
-.thanks {
+.gracias {
   font-family: "Fraunces", Georgia, serif;
   font-style: italic;
-  font-size: 1.12rem;
-  color: var(--ink-soft);
-  margin: 24px 0 0;
+  font-size: 1.14rem;
+  color: var(--tinta-media);
+  margin: auto 0 0;
+  padding-top: 26px;
 }
 
 /* ===========================================================================
-   5. CONTROLES
+   8. CONTROLES
    ======================================================================== */
 
-/* Zonas invisibles para pasar página tocando los lados.
-   Son franjas en los bordes: el centro queda libre para hacer scroll. */
+/* Franjas laterales para pasar página tocando. El centro queda libre para
+   poder hacer scroll si una página lo necesita. */
 .tap {
   position: absolute;
   top: 0; bottom: 0;
@@ -433,7 +532,6 @@ body {
 .tap.prev { left: 0; }
 .tap.next { right: 0; }
 
-/* Barra inferior: ‹ ›, puntitos y contador */
 .bar {
   position: fixed;
   left: 50%;
@@ -445,9 +543,9 @@ body {
   gap: 10px;
   padding: 7px 10px;
   border-radius: 999px;
-  background: var(--paper);
-  border: 1px solid var(--rule);
-  box-shadow: 0 6px 22px var(--shadow);
+  background: var(--papel);
+  border: 1px solid var(--linea);
+  box-shadow: 0 6px 22px var(--sombra);
   max-width: calc(100vw - 24px);
 }
 
@@ -455,30 +553,25 @@ body {
   flex: none;
   width: 38px; height: 38px;
   border-radius: 50%;
-  border: 1px solid var(--rule);
-  background: var(--paper);
-  color: var(--ink);
+  border: 1px solid var(--linea);
+  background: var(--papel);
+  color: var(--tinta);
   font-size: 1.15rem;
   line-height: 1;
   display: grid;
   place-items: center;
   cursor: pointer;
   font-family: inherit;
-  transition: background .15s ease, color .15s ease;
+  transition: background .15s ease;
 }
 
-.arrow-btn:hover:not(:disabled) { background: var(--accent-bg); }
-
-.arrow-btn:disabled {
-  opacity: .34;
-  cursor: default;
-}
+.arrow-btn:hover:not(:disabled) { background: var(--papel-2); }
+.arrow-btn:disabled { opacity: .32; cursor: default; }
 
 .dots {
   display: flex;
   align-items: center;
   gap: 4px;
-  flex-wrap: nowrap;
   overflow: hidden;
 }
 
@@ -498,19 +591,19 @@ body {
   content: "";
   width: 7px; height: 7px;
   border-radius: 50%;
-  background: var(--rule);
+  background: var(--linea);
   transition: background .2s ease, transform .2s ease;
 }
 
 .dot[aria-current="true"]::before {
-  background: var(--accent);
+  background: var(--acento);
   transform: scale(1.42);
 }
 
 .counter {
   flex: none;
   font-size: .74rem;
-  color: var(--ink-faint);
+  color: var(--tinta-tenue);
   font-variant-numeric: tabular-nums;
   padding: 0 2px;
   min-width: 34px;
@@ -518,17 +611,16 @@ body {
 }
 
 /* ===========================================================================
-   6. MOVIMIENTO REDUCIDO
-   Si el usuario pide menos animación, el giro es casi instantáneo.
+   9. MOVIMIENTO REDUCIDO
    ======================================================================== */
 @media (prefers-reduced-motion: reduce) {
-  :root { --flip-time: .001s; }
+  :root { --flip: .001s; }
   .page { transition-duration: .001s; }
-  .cover-hint .arrow { animation: none; }
+  .cover-pie .flecha { animation: none; }
   .dot::before, .arrow-btn { transition: none; }
 }
 
-/* Pantallas altas: un poco más de aire */
+/* Pantallas altas: un poco más de aire arriba */
 @media (min-height: 760px) {
-  .face { padding-top: 56px; }
+  .face { padding-top: 48px; }
 }

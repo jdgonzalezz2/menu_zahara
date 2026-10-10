@@ -1,5 +1,7 @@
 ---
 /** Contraportada: horario, contacto y espacio para el QR de domicilios. */
+import Espiga from "./Espiga.astro";
+
 const { negocio } = Astro.props;
 
 const campos = [
@@ -11,8 +13,9 @@ const campos = [
 ---
 
 <div class="back-page">
-  <p class="sec-kicker">Visítanos</p>
   <h2 class="sec-title">{negocio.nombre}</h2>
+
+  <div class="filete" aria-hidden="true"><Espiga /></div>
 
   {campos.map(([etiqueta, valor]) => (
     <div class="info-block">
@@ -26,5 +29,5 @@ const campos = [
     <span>Espacio para el QR de domicilios o redes</span>
   </div>
 
-  <p class="thanks">¡Gracias por visitarnos!</p>
+  <p class="gracias">¡Gracias por visitarnos!</p>
 </div>
