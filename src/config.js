@@ -55,7 +55,7 @@ export const TIMEOUT_EN_VIVO = 2500;
  * Con 6 y fotos de 84 px la página queda bien llena sin desbordarse. Si lo
  * subes mucho vuelve el scroll; si lo bajas, hay más páginas que pasar.
  */
-export const MAX_PRODUCTOS_POR_PAGINA = 6;
+export const MAX_PRODUCTOS_POR_PAGINA = 5;
 
 /**
  * Secciones que se dibujan como TABLA COMPACTA en vez de lista con fotos.
@@ -85,7 +85,7 @@ export const SECCIONES_COMPACTAS = [
 ];
 
 /** Cuántos renglones caben en una página de tabla compacta. */
-export const MAX_COMPACTO = 13;
+export const MAX_COMPACTO = 12;
 
 /* --- Identidad del negocio ---------------------------------------------
    Esto cambia muy de vez en cuando, así que vive en el código y no en el

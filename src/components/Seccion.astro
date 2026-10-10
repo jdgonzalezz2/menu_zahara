@@ -21,7 +21,7 @@ const kicker =
 ---
 
 <div class="menu-page" data-seccion={seccion.titulo}>
-  <header class="sec-head">
+  <header class:list={["sec-head", { continua: seccion.parte > 1 }]}>
     <p class="sec-kicker"><Espiga /><span>{kicker}</span></p>
     <h2 class="sec-title">{seccion.titulo}</h2>
     {seccion.subtitulo && <p class="sec-sub">{seccion.subtitulo}</p>}
@@ -45,6 +45,4 @@ const kicker =
       <Producto producto={producto} fotos={FOTOS} />
     ))}
   </ul>
-
-  <p class="page-note">Precios en pesos colombianos · IVA incluido</p>
 </div>

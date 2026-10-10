@@ -198,14 +198,24 @@ body {
 .face-scroll {
   position: absolute;
   inset: 0;
-  overflow-y: auto;
   overflow-x: hidden;
+
+  /* El scroll queda solo como red de seguridad para un celular rarísimo;
+     la barra NO se muestra nunca. Una revista no tiene barra de scroll. */
+  overflow-y: auto;
+  scrollbar-width: none;          /* Firefox */
+  -ms-overflow-style: none;       /* Edge viejo */
   -webkit-overflow-scrolling: touch;
+
+  /* Los espacios se miden en vh: en un celular bajito todo se aprieta un
+     poco en vez de desbordarse. Es lo que hace que la página SIEMPRE quepa. */
   padding:
-    calc(30px + env(safe-area-inset-top))
+    clamp(16px, 3.4vh, 42px)
     var(--margen)
-    calc(104px + env(safe-area-inset-bottom));
+    calc(clamp(74px, 11vh, 100px) + env(safe-area-inset-bottom));
 }
+
+.face-scroll::-webkit-scrollbar { width: 0; height: 0; display: none; }
 
 /* Sombra pegada al lomo: es lo que hace que parezca un libro */
 .face::before {
@@ -284,14 +294,14 @@ body {
 
 /* Espacio reservado para el logo. Cuando llegue, reemplaza este recuadro. */
 .logo-slot {
-  width: 64px;
-  height: 64px;
+  width: clamp(42px, 7.8vh, 64px);
+  height: clamp(42px, 7.8vh, 64px);
   border: 1px dashed var(--linea);
   border-radius: 50%;
   display: grid;
   place-items: center;
   color: var(--tinta-tenue);
-  margin-bottom: 18px;
+  margin-bottom: clamp(8px, 2vh, 18px);
   flex: none;
 }
 
@@ -303,7 +313,7 @@ body {
   letter-spacing: .3em;
   text-transform: uppercase;
   color: var(--tinta-media);
-  margin: 0 0 14px;
+  margin: 0 0 clamp(7px, 1.7vh, 14px);
   padding-left: .3em;        /* compensa el letter-spacing del último signo */
 }
 
@@ -315,7 +325,7 @@ body {
   width: 100%;
   max-width: 190px;
   color: var(--dorado);
-  margin: 0 0 16px;
+  margin: 0 0 clamp(8px, 1.9vh, 16px);
 }
 
 .filete::before,
@@ -335,7 +345,7 @@ body {
   font-family: "Fraunces", Georgia, "Times New Roman", serif;
   font-weight: 700;
   font-variation-settings: "opsz" 144, "SOFT" 20;
-  font-size: clamp(2.4rem, 13vw, 3.3rem);
+  font-size: clamp(1.7rem, min(12vw, 5.6vh), 3.3rem);
   line-height: .93;
   letter-spacing: .005em;
   text-transform: uppercase;
@@ -348,9 +358,9 @@ body {
   font-family: "Fraunces", Georgia, serif;
   font-style: italic;
   font-weight: 400;
-  font-size: 1rem;
+  font-size: clamp(.84rem, 1.9vh, 1rem);
   color: var(--tinta-media);
-  margin: 10px 0 0;
+  margin: clamp(5px, 1.2vh, 10px) 0 0;
   max-width: 26ch;
 }
 
@@ -360,9 +370,9 @@ body {
    franja; en uno grande, casi cuadrada. */
 .hero {
   flex: 1 1 auto;
-  min-height: 110px;
+  min-height: clamp(70px, 13vh, 110px);
   width: 100%;
-  margin: 20px 0 0;
+  margin: clamp(10px, 2.3vh, 20px) 0 0;
   border-radius: 14px;
   overflow: hidden;
   box-shadow: 0 10px 28px var(--sombra-foto);
@@ -378,7 +388,7 @@ body {
 
 .cover-pie {
   flex: none;
-  padding-top: 18px;
+  padding-top: clamp(8px, 2vh, 18px);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -397,7 +407,7 @@ body {
    5. ENCABEZADO DE SECCIÓN
    ======================================================================== */
 .sec-head {
-  margin: 0 0 22px;
+  margin: 0 0 clamp(11px, 2.6vh, 22px);
 }
 
 .sec-kicker {
@@ -425,11 +435,17 @@ body {
   background: var(--linea);
 }
 
+/* En la segunda parte de una sección el lector ya sabe dónde está:
+   el título se achica y libera espacio para los productos. */
+.sec-head.continua { margin-bottom: clamp(8px, 1.8vh, 14px); }
+.sec-head.continua .sec-title { font-size: clamp(1.1rem, min(5vw, 2.6vh), 1.5rem); }
+.sec-head.continua .sec-kicker { margin-bottom: 5px; }
+
 .sec-title {
   font-family: "Fraunces", Georgia, serif;
   font-weight: 700;
   font-variation-settings: "opsz" 144, "SOFT" 20;
-  font-size: clamp(2.1rem, 10vw, 2.8rem);
+  font-size: clamp(1.55rem, min(9.5vw, 4.6vh), 2.8rem);
   line-height: .98;
   letter-spacing: .005em;
   text-transform: uppercase;
@@ -453,7 +469,7 @@ body {
 /* Sin líneas separadoras: los productos flotan sobre la madera y lo que
    los separa es el aire, no una regla. */
 .item {
-  padding: 13px 0;
+  padding: clamp(5px, 1.4vh, 14px) 0;
 }
 
 /* Con foto: el texto se agrupa y se centra contra la miniatura.
@@ -481,7 +497,7 @@ body {
   font-style: italic;
   font-weight: 600;
   font-variation-settings: "opsz" 36, "SOFT" 40;
-  font-size: 1.12rem;
+  font-size: clamp(.95rem, 2.05vh, 1.12rem);
   line-height: 1.25;
   letter-spacing: -.005em;
   color: var(--tinta);
@@ -497,7 +513,7 @@ body {
   font-family: "Fraunces", Georgia, serif;
   font-weight: 600;
   font-variation-settings: "opsz" 20;
-  font-size: .95rem;
+  font-size: clamp(.82rem, 1.75vh, .95rem);
   color: var(--acento);
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
@@ -505,7 +521,7 @@ body {
 
 .item-desc {
   margin: 2px 0 0;
-  font-size: .8rem;
+  font-size: clamp(.71rem, 1.5vh, .8rem);
   line-height: 1.4;
   color: var(--tinta-media);
   max-width: 42ch;
@@ -519,15 +535,15 @@ body {
 .item-photo {
   flex: none;
   display: block;
-  width: 108px;
-  height: 108px;
+  width: clamp(58px, 12.2vh, 108px);
+  height: clamp(58px, 12.2vh, 108px);
   object-fit: cover;
   filter: drop-shadow(0 7px 13px var(--sombra-foto));
 }
 
 /* ---- Imagen de cabecera de sección ---- */
 .sec-foto {
-  margin: 0 0 20px;
+  margin: 0 0 clamp(10px, 2.3vh, 20px);
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 6px 18px var(--sombra-foto);
@@ -537,8 +553,7 @@ body {
 .sec-foto img {
   display: block;
   width: 100%;
-  height: auto;
-  aspect-ratio: 21 / 9;
+  height: clamp(74px, 17vh, 150px);
   object-fit: cover;
 }
 
@@ -551,12 +566,12 @@ body {
   background: var(--panel);
   color: var(--panel-tinta);
   border-radius: 12px;
-  padding: 16px 18px;
+  padding: clamp(10px, 2vh, 16px) clamp(13px, 2.4vw, 18px);
   box-shadow: 0 8px 22px var(--sombra);
 }
 
 .items.compacto .item {
-  padding: 7px 0;
+  padding: clamp(4px, .8vh, 7px) 0;
   border-bottom: 1px solid rgba(255, 255, 255, .13);
 }
 
@@ -630,7 +645,7 @@ body {
 
 /* ---- Pie de página de carta ---- */
 .page-note {
-  margin: 26px 0 0;
+  margin: clamp(12px, 2.6vh, 26px) 0 0;
   font-size: .72rem;
   letter-spacing: .04em;
   color: var(--tinta-tenue);
@@ -650,7 +665,7 @@ body {
 
 .back-page .filete { margin-top: 4px; }
 
-.info-block { margin: 0 0 20px; }
+.info-block { margin: 0 0 clamp(9px, 2.2vh, 20px); }
 
 .info-label {
   font-size: .67rem;
@@ -663,14 +678,14 @@ body {
 
 .info-value {
   font-family: "Fraunces", Georgia, serif;
-  font-size: 1.05rem;
+  font-size: clamp(.9rem, 2vh, 1.05rem);
   color: var(--tinta);
   margin: 0;
 }
 
 .qr-slot {
-  width: 150px;
-  height: 150px;
+  width: clamp(92px, 17.5vh, 150px);
+  height: clamp(92px, 17.5vh, 150px);
   margin: 6px auto 0;
   border: 2px dashed var(--linea);
   border-radius: 14px;
@@ -686,10 +701,10 @@ body {
 .gracias {
   font-family: "Fraunces", Georgia, serif;
   font-style: italic;
-  font-size: 1.14rem;
+  font-size: clamp(.95rem, 2.1vh, 1.14rem);
   color: var(--tinta-media);
   margin: auto 0 0;
-  padding-top: 26px;
+  padding-top: clamp(12px, 2.8vh, 26px);
 }
 
 /* ===========================================================================
@@ -757,7 +772,8 @@ body {
 }
 
 .dot {
-  flex: none;
+  flex: 0 1 22px;      /* se encogen si hay muchas páginas */
+  min-width: 13px;
   width: 22px; height: 22px;
   border: 0;
   background: transparent;
@@ -802,6 +818,4 @@ body {
 }
 
 /* Pantallas altas: un poco más de aire arriba */
-@media (min-height: 760px) {
-  .face { padding-top: 48px; }
-}
+
