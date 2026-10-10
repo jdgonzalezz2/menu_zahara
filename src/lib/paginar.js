@@ -17,10 +17,16 @@
  * ocupa varias páginas.
  *
  * @param {Array} secciones  [{ titulo, subtitulo, productos: [] }]
- * @param {number} max       Máximo de productos por página
+ * @param {number|Function} max  Máximo de productos por página. Puede ser un
+ *   número, o una función que recibe la sección y devuelve su máximo: en una
+ *   tabla compacta de bebidas caben muchos más que en una lista con fotos.
  */
 export function paginarSecciones(secciones, max) {
-  const limite = Number.isFinite(max) && max > 0 ? Math.floor(max) : 6;
+  const limiteDe = (seccion) => {
+    const bruto = typeof max === "function" ? max(seccion) : max;
+    return Number.isFinite(bruto) && bruto > 0 ? Math.floor(bruto) : 6;
+  };
+
   const paginas = [];
 
   // Número de SECCIÓN, no de página: las dos partes de "Desayunos" son
@@ -35,6 +41,7 @@ export function paginarSecciones(secciones, max) {
 
     numeroSeccion++;
 
+    const limite = limiteDe(seccion);
     const totalPartes = Math.ceil(productos.length / limite);
 
     // Reparto parejo: los primeros `resto` trozos llevan uno de más.
@@ -53,6 +60,7 @@ export function paginarSecciones(secciones, max) {
         parte: i + 1,
         totalPartes,
         numeroSeccion,
+        compacta: !!seccion.compacta,
       });
 
       desde += cuantos;

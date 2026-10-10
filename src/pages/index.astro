@@ -21,7 +21,7 @@ import Contraportada from "../components/Contraportada.astro";
 
 import {
   SHEET_ID, SHEET_HOJA, SHEET_GID, NEGOCIO, TIMEOUT_EN_VIVO, BORRADOR,
-  MAX_PRODUCTOS_POR_PAGINA,
+  MAX_PRODUCTOS_POR_PAGINA, SECCIONES_COMPACTAS, MAX_COMPACTO,
 } from "../config.js";
 import { traerMenu, urlDelSheet } from "../lib/sheet.js";
 import { paginarSecciones, nombreDePagina } from "../lib/paginar.js";
@@ -54,7 +54,21 @@ console.log(`[carta] Origen de los datos: ${origen}`);
 
 // Las secciones largas se parten en varias páginas, para que el cliente
 // pase páginas en vez de hacer scroll.
-const paginasDeCarta = paginarSecciones(menu.paginas, MAX_PRODUCTOS_POR_PAGINA);
+const sinTildes = (t) =>
+  String(t ?? "").trim().toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+
+const compactas = new Set(SECCIONES_COMPACTAS.map(sinTildes));
+
+// Se marca cada sección antes de paginar, para que la página sepa cómo
+// dibujarse y cuántos renglones le caben.
+const seccionesMarcadas = menu.paginas.map((s) => ({
+  ...s,
+  compacta: compactas.has(sinTildes(s.titulo)),
+}));
+
+const paginasDeCarta = paginarSecciones(seccionesMarcadas, (s) =>
+  s.compacta ? MAX_COMPACTO : MAX_PRODUCTOS_POR_PAGINA
+);
 
 // Orden final: Portada → páginas de carta → Contraportada
 const nombresDePagina = [

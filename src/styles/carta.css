@@ -171,6 +171,23 @@ body {
   z-index: 2;
 }
 
+/* Grano de papel. Es un SVG de ruido en línea (unos 250 bytes, sin
+   petición de red) a opacidad muy baja: no se "ve", se siente. Subirla
+   más de .05 empieza a verse sucio en vez de cálido. */
+.face::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: .055;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@media (prefers-color-scheme: dark) {
+  .face::after { opacity: .085; }
+}
+
 .face.front { transform: rotateY(0deg); }
 .face.back  { transform: rotateY(180deg); background: var(--papel-2); }
 
@@ -351,6 +368,9 @@ body {
 /* ===========================================================================
    6. PRODUCTOS
    ======================================================================== */
+/* El contenido va sobre el grano (.face::after está en z-index 1) */
+.cover, .menu-page, .back-page { position: relative; z-index: 2; }
+
 .items { list-style: none; margin: 0; padding: 0; }
 
 .item {
@@ -431,6 +451,44 @@ body {
   height: 96px;
   object-fit: cover;
   filter: drop-shadow(0 5px 9px var(--sombra));
+}
+
+/* ---- Tabla compacta: bebidas y adicionales ----
+   Ponerle foto a cada renglón satura la página y no ayuda: el cliente ya
+   sabe cómo se ve un tinto. Densa, de dos columnas, se lee de un vistazo. */
+.items.compacto .item {
+  padding: 8px 0;
+  border-bottom: 1px dotted var(--linea);
+}
+
+.items.compacto .item-name {
+  font-family: "Karla", system-ui, sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: .95rem;
+}
+
+.items.compacto .item-price {
+  font-size: .95rem;
+  font-variation-settings: "opsz" 14;
+}
+
+.items.compacto .item-desc {
+  font-size: .78rem;
+  margin-top: 1px;
+  color: var(--tinta-tenue);
+}
+
+/* En pantallas con algo de ancho, la tabla pasa a dos columnas */
+@media (min-width: 400px) {
+  .items.compacto {
+    columns: 2;
+    column-gap: 26px;
+  }
+  .items.compacto .item {
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+  }
 }
 
 /* ---- Etiquetas ---- */

@@ -23,7 +23,7 @@ const kicker =
     {seccion.subtitulo && <p class="sec-sub">{seccion.subtitulo}</p>}
   </header>
 
-  <ul class="items">
+  <ul class:list={["items", { compacto: seccion.compacta }]}>
     {seccion.productos.map((producto) => (
       <Producto producto={producto} fotos={FOTOS} />
     ))}

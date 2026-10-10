@@ -57,6 +57,26 @@ export const TIMEOUT_EN_VIVO = 2500;
  */
 export const MAX_PRODUCTOS_POR_PAGINA = 6;
 
+/**
+ * Secciones que se dibujan como TABLA COMPACTA en vez de lista con fotos.
+ *
+ * Para bebidas y adicionales, ponerle foto a cada renglón satura la página
+ * y no ayuda a nadie: el cliente ya sabe cómo se ve un tinto. Una tabla
+ * densa se lee de un vistazo y caben el doble por página.
+ *
+ * Se comparan sin tildes ni mayúsculas, así que "bebidas" encuentra
+ * "Bebidas".
+ */
+export const SECCIONES_COMPACTAS = [
+  "Bebidas",
+  "Bebidas calientes",
+  "Bebidas frías",
+  "Adicionales",
+];
+
+/** Cuántos renglones caben en una página de tabla compacta. */
+export const MAX_COMPACTO = 13;
+
 /* --- Identidad del negocio ---------------------------------------------
    Esto cambia muy de vez en cuando, así que vive en el código y no en el
    Sheet: menos cosas que se puedan romper en el día a día.

@@ -73,5 +73,28 @@ ok(nombreDePagina(p[0]) === 'Desayunos (1/2)', 'nombre con parte', nombreDePagin
 ok(nombreDePagina(paginarSecciones([sec('Bebidas', 2)], 6)[0]) === 'Bebidas',
    'sin parte cuando es una sola página');
 
+// --- El número es el de la SECCIÓN, no el de la página ---
+p = paginarSecciones([sec('Panadería', 3), sec('Desayunos', 11), sec('Bebidas', 2)], 6);
+ok(p.map(x => x.numeroSeccion).join(',') === '1,2,2,3',
+   'numeroSeccion: las dos partes de Desayunos son ambas la 2',
+   p.map(x => x.numeroSeccion).join(','));
+
+// --- Máximo distinto por sección (tabla compacta de bebidas) ---
+const limitePorTitulo = (s) => (s.titulo === 'Bebidas' ? 12 : 6);
+ok(reparto(paginarSecciones([sec('Desayunos', 11), sec('Bebidas', 12)], limitePorTitulo)) === '6,5,12',
+   'en la tabla compacta caben más por página',
+   reparto(paginarSecciones([sec('Desayunos', 11), sec('Bebidas', 12)], limitePorTitulo)));
+ok(reparto(paginarSecciones([sec('Bebidas', 13)], limitePorTitulo)) === '7,6',
+   '13 bebidas con máximo 12 -> 7,6 (parejo)',
+   reparto(paginarSecciones([sec('Bebidas', 13)], limitePorTitulo)));
+ok(reparto(paginarSecciones([sec('A', 10)], () => undefined)) === '5,5',
+   'función que devuelve basura -> valor por defecto (6), repartido parejo 5,5',
+   reparto(paginarSecciones([sec('A', 10)], () => undefined)));
+
+// --- La marca de sección compacta viaja a la página ---
+const conMarca = [{ titulo: 'Bebidas', compacta: true, productos: sec('B', 3).productos }];
+ok(paginarSecciones(conMarca, 12)[0].compacta === true, 'conserva compacta: true');
+ok(paginarSecciones([sec('Desayunos', 3)], 6)[0].compacta === false, 'compacta: false por defecto');
+
 console.log(fallos ? `\n${fallos} FALLOS` : '\n*** TODAS LAS PRUEBAS PASAN ***');
 process.exit(fallos ? 1 : 0);
