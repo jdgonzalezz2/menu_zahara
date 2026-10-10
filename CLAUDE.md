@@ -132,16 +132,25 @@ en COP.
 
 ---
 
-### Datos reales (estado al 9 de octubre de 2026)
-- [x] **Nombre:** Panadería Zahara
-- [x] **Dirección:** Cra. 59 #132A-36, Bogotá
-- [ ] Logo y colores de la identidad visual
-- [ ] **Precios actuales confirmados por el dueño** (los que tenemos son de
-      junio de 2025, o sea ~16 meses viejos)
-- [ ] Carta completa: solo tenemos los 10 combos de desayuno. Faltan
-      panadería, pizzería, frutería y bebidas
-- [ ] Horario de apertura y días
-- [ ] Teléfono / WhatsApp de domicilios
-- [ ] Fotos propias de los productos (opcional)
+### Estado al 9 de octubre de 2026
 
-> El estado detallado vive en [`BITACORA.md`](BITACORA.md).
+La carta está **publicada y funcionando**: https://jdgonzalezz2.github.io/menu_zahara/
+
+> ⚠️ **Antes de tocar nada, lee [`BITACORA.md`](BITACORA.md).** Tiene la
+> sección *"Cómo funciona la carta"*, que explica de dónde salen los datos,
+> dónde se toca cada cosa y qué decisiones de implementación NO son obvias
+> y no conviene deshacer sin saber por qué están.
+
+**Lo que más falta, con diferencia: FOTOS.** 48 de 51 productos no tienen, y
+ninguna dirección de arte arregla una carta de puro texto.
+
+Datos del negocio:
+- [x] Nombre: **Panadería Zahara**
+- [x] Dirección: Cra. 59 #132A-36, Bogotá
+- [x] Horario: 6:00 a.m. – 10:00 p.m.
+- [x] Teléfono: **no tienen** (el de Google está desactualizado, no copiarlo)
+- [x] Precios de los 11 combos de desayuno (reales, junio de 2025)
+- [ ] 📸 Fotos de los productos
+- [ ] 💵 Precios reales del resto (hoy son de muestra → la carta va con `noindex`)
+- [ ] 🏷️ Logo e identidad visual
+- [ ] 🍕 Carta de pizzería y frutería
