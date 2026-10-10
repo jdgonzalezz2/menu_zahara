@@ -90,6 +90,23 @@ export const NEGOCIO = {
 };
 
 /**
+ * Fotos de los productos.
+ *
+ * Viven acá y NO en el Sheet a propósito: meter una foto exige correr
+ * scripts/preparar-foto.py y hacer commit, o sea que es trabajo de Julián,
+ * no del dueño. El Sheet se queda con lo que cambia a diario (precios y
+ * agotados), que es lo único que el dueño debería tener que tocar.
+ *
+ * La clave es el nombre EXACTO del producto como está en el Sheet.
+ * Si una fila del Sheet trae algo en la columna Foto, eso manda sobre esto.
+ */
+export const FOTOS = {
+  "Combo 3 — Caldo de costilla": "combo-3-costilla.webp",
+  "Combo 4": "combo-4.webp",
+  "Combo 8": "combo-8.webp",
+};
+
+/**
  * Modo borrador.
  *
  * En true, la carta le pide a los buscadores que NO la indexen.

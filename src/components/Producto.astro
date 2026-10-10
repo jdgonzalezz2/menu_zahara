@@ -6,7 +6,11 @@
 import { formatearPrecio } from "../lib/precio.js";
 import { rutaDeAsset } from "../lib/rutas.js";
 
-const { producto } = Astro.props;
+const { producto, fotos = {} } = Astro.props;
+
+// La columna Foto del Sheet manda; si está vacía, se busca en el mapa
+// de src/config.js.
+const foto = producto.img || fotos[producto.nombre] || null;
 
 const agotado = producto.etiqueta === "agotado";
 const nuevo = producto.etiqueta === "nuevo";
@@ -17,7 +21,7 @@ const precio = agotado ? null : formatearPrecio(producto.precio);
 // data-producto deja que el refresco en vivo encuentre esta fila después.
 ---
 
-<li class:list={["item", { agotado, "con-foto": !!producto.img }]} data-producto={producto.nombre}>
+<li class:list={["item", { agotado, "con-foto": !!foto }]} data-producto={producto.nombre}>
   <div class="item-texto">
     <div class="item-row">
       <span class="item-name">
@@ -34,10 +38,10 @@ const precio = agotado ? null : formatearPrecio(producto.precio);
     {producto.desc && <p class="item-desc">{producto.desc}</p>}
   </div>
 
-  {producto.img && (
+  {foto && (
     <img
       class="item-photo"
-      src={rutaDeAsset(import.meta.env.BASE_URL, producto.img)}
+      src={rutaDeAsset(import.meta.env.BASE_URL, foto)}
       alt={`${producto.nombre}: ${producto.desc || "plato de la panadería"}`}
       width="88"
       height="88"

@@ -2,6 +2,7 @@
 /** Una página de la carta: encabezado de sección + su lista de productos. */
 import Producto from "./Producto.astro";
 import Espiga from "./Espiga.astro";
+import { FOTOS } from "../config.js";
 
 const { seccion } = Astro.props;
 
@@ -23,7 +24,9 @@ const kicker =
   </header>
 
   <ul class="items">
-    {seccion.productos.map((producto) => <Producto producto={producto} />)}
+    {seccion.productos.map((producto) => (
+      <Producto producto={producto} fotos={FOTOS} />
+    ))}
   </ul>
 
   <p class="page-note">Precios en pesos colombianos · IVA incluido</p>
