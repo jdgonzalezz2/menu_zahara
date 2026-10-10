@@ -17,19 +17,21 @@ const precio = agotado ? null : formatearPrecio(producto.precio);
 ---
 
 <li class:list={["item", { agotado, "con-foto": !!producto.img }]} data-producto={producto.nombre}>
-  <div class="item-row">
-    <span class="item-name">
-      {producto.nombre}
-      {nuevo && <span class="tag tag-nuevo">Nuevo</span>}
-      {agotado && <span class="tag tag-agotado">Agotado</span>}
-    </span>
+  <div class="item-texto">
+    <div class="item-row">
+      <span class="item-name">
+        {producto.nombre}
+        {nuevo && <span class="tag tag-nuevo">Nuevo</span>}
+        {agotado && <span class="tag tag-agotado">Agotado</span>}
+      </span>
 
-    <span class="item-dots"></span>
+      <span class="item-dots"></span>
 
-    {precio && <span class="item-price">{precio}</span>}
+      {precio && <span class="item-price">{precio}</span>}
+    </div>
+
+    {producto.desc && <p class="item-desc">{producto.desc}</p>}
   </div>
-
-  {producto.desc && <p class="item-desc">{producto.desc}</p>}
 
   {producto.img && (
     <img

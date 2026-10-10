@@ -311,21 +311,23 @@ body {
    Miniatura cuadrada al lado del texto. Se eligió así y no a todo el ancho
    porque una foto grande por producto haría las páginas larguísimas, y la
    gracia del flipbook es pasar páginas, no hacer scroll. */
+/* El texto va envuelto en .item-texto para poder centrarlo como un bloque
+   contra la miniatura. Con grid no salía: la foto abarcaba las dos filas,
+   cada una crecía a la mitad de la altura y quedaba un hueco entre el
+   nombre y la descripción. */
 .item.con-foto {
-  display: grid;
-  grid-template-columns: 1fr 84px;
-  grid-template-areas:
-    "row   foto"
-    "desc  foto";
-  column-gap: 14px;
-  align-items: start;
+  display: flex;
+  align-items: center;
+  gap: 14px;
 }
 
-.item.con-foto .item-row  { grid-area: row; }
-.item.con-foto .item-desc { grid-area: desc; }
+.item.con-foto .item-texto {
+  flex: 1;
+  min-width: 0;        /* deja que el texto largo se ajuste en vez de desbordar */
+}
 
 .item-photo {
-  grid-area: foto;
+  flex: none;
   display: block;
   width: 84px;
   height: 84px;

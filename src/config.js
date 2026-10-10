@@ -43,6 +43,20 @@ export const SHEET_GID = "1450287302";
  */
 export const TIMEOUT_EN_VIVO = 2500;
 
+/**
+ * Cuántos productos caben, como máximo, en una página de la carta.
+ *
+ * Una sección con más productos se parte sola en varias páginas, repartidas
+ * parejo: con 7 productos salen páginas de 4 y 3, no de 6 y 1.
+ *
+ * La idea es que el cliente PASE PÁGINAS en vez de hacer scroll, que es la
+ * gracia del formato revista.
+ *
+ * Con 6 y fotos de 84 px la página queda bien llena sin desbordarse. Si lo
+ * subes mucho vuelve el scroll; si lo bajas, hay más páginas que pasar.
+ */
+export const MAX_PRODUCTOS_POR_PAGINA = 6;
+
 /* --- Identidad del negocio ---------------------------------------------
    Esto cambia muy de vez en cuando, así que vive en el código y no en el
    Sheet: menos cosas que se puedan romper en el día a día.

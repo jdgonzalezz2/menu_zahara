@@ -19,8 +19,12 @@ import Portada from "../components/Portada.astro";
 import Seccion from "../components/Seccion.astro";
 import Contraportada from "../components/Contraportada.astro";
 
-import { SHEET_ID, SHEET_HOJA, SHEET_GID, NEGOCIO, TIMEOUT_EN_VIVO, BORRADOR } from "../config.js";
+import {
+  SHEET_ID, SHEET_HOJA, SHEET_GID, NEGOCIO, TIMEOUT_EN_VIVO, BORRADOR,
+  MAX_PRODUCTOS_POR_PAGINA,
+} from "../config.js";
 import { traerMenu, urlDelSheet } from "../lib/sheet.js";
+import { paginarSecciones, nombreDePagina } from "../lib/paginar.js";
 import respaldo from "../data/menu-respaldo.json";
 
 let menu = respaldo;
@@ -48,10 +52,14 @@ if (SHEET_ID) {
 
 console.log(`[carta] Origen de los datos: ${origen}`);
 
-// Orden final: Portada → una página por sección → Contraportada
+// Las secciones largas se parten en varias páginas, para que el cliente
+// pase páginas en vez de hacer scroll.
+const paginasDeCarta = paginarSecciones(menu.paginas, MAX_PRODUCTOS_POR_PAGINA);
+
+// Orden final: Portada → páginas de carta → Contraportada
 const nombresDePagina = [
   "Portada",
-  ...menu.paginas.map((s) => s.titulo),
+  ...paginasDeCarta.map(nombreDePagina),
   "Horario y contacto",
 ];
 
@@ -81,7 +89,7 @@ const configEnVivo = SHEET_ID
       <div class="face front">
         {i === 0 && <Portada negocio={NEGOCIO} />}
         {i > 0 && i < total - 1 && (
-          <Seccion seccion={menu.paginas[i - 1]} numero={i} />
+          <Seccion seccion={paginasDeCarta[i - 1]} />
         )}
         {i === total - 1 && <Contraportada negocio={NEGOCIO} />}
       </div>
