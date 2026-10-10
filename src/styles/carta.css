@@ -15,9 +15,13 @@
   color-scheme: light dark;
 
   /* --- Color --- */
-  --papel:       #FDFAF4;   /* blanco cálido: fondo de página */
-  --papel-2:     #F5EEE1;   /* beige panadería: recuadros */
-  --papel-3:     #EFE5D4;   /* un paso más: bordes de foto, placeholders */
+  --papel:       #EDE2CE;   /* madera clara: fondo de página */
+  --veta:        #E6DBC6;   /* veta de la madera */
+  --veta-2:      #F1E8D7;   /* veta clara */
+  --papel-2:     #E5D8C0;   /* recuadros */
+  --papel-3:     #DACAAE;   /* un paso más */
+  --panel:       #9E4328;   /* terracota sólida: paneles de tabla */
+  --panel-tinta: #FBF3E6;
   --tinta:       #2B1D14;   /* café espresso: texto principal */
   --tinta-media: #6B5444;   /* descripciones */
   --tinta-tenue: #9A8571;   /* notas, kickers */
@@ -38,9 +42,13 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --papel:       #14100D;
-    --papel-2:     #1E1813;
-    --papel-3:     #281F18;
+    --papel:       #1A1510;
+    --veta:        #16120D;
+    --veta-2:      #201A13;
+    --papel-2:     #241C15;
+    --papel-3:     #2E241B;
+    --panel:       #7A3520;
+    --panel-tinta: #F6E9D8;
     --tinta:       #F5EBDD;
     --tinta-media: #C9B7A3;
     --tinta-tenue: #93806C;
@@ -160,8 +168,29 @@ body {
   inset: 0;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
-  background: var(--papel);
   overflow: hidden;              /* el scroll lo hace .face-scroll */
+
+  /* Veta de madera hecha con degradados, sin una sola imagen.
+     Franjas de anchos irregulares: si fueran regulares se leería como
+     código de barras en vez de como madera. */
+  background-color: var(--papel);
+
+  /* Cada franja entra y sale con una transición suave en vez de un corte
+     seco: con cortes duros se lee como código de barras, no como veta. */
+  background-image:
+    repeating-linear-gradient(
+      93deg,
+      transparent     0px, var(--veta)     9px, transparent    21px,
+      transparent    44px, var(--veta-2)  52px, transparent    63px,
+      transparent    97px, var(--veta)   103px, transparent   118px,
+      transparent   151px
+    ),
+    repeating-linear-gradient(
+      88.4deg,
+      transparent     0px, var(--veta-2)  17px, transparent    38px,
+      transparent   119px, var(--veta)   131px, transparent   147px,
+      transparent   233px
+    );
 }
 
 /* El contenido va en su propio contenedor con scroll, para que el brillo
@@ -269,7 +298,7 @@ body {
 .logo-slot .espiga { height: 30px; }
 
 .cover-marca {
-  font-size: .74rem;
+  font-size: .72rem;
   font-weight: 700;
   letter-spacing: .3em;
   text-transform: uppercase;
@@ -300,15 +329,18 @@ body {
 
 .filete .espiga { height: 24px; }
 
+/* Mismo idioma que los encabezados de sección: mayúsculas en terracota.
+   Si la portada hablara distinto, la carta se sentiría de dos autores. */
 .cover-titulo {
   font-family: "Fraunces", Georgia, "Times New Roman", serif;
-  font-weight: 600;
-  font-variation-settings: "opsz" 120, "SOFT" 30;
-  font-size: clamp(2.5rem, 14vw, 3.5rem);
-  line-height: .96;
-  letter-spacing: -.015em;
+  font-weight: 700;
+  font-variation-settings: "opsz" 144, "SOFT" 20;
+  font-size: clamp(2.4rem, 13vw, 3.3rem);
+  line-height: .93;
+  letter-spacing: .005em;
+  text-transform: uppercase;
   margin: 0;
-  color: var(--tinta);
+  color: var(--acento);
   text-wrap: balance;
 }
 
@@ -316,9 +348,9 @@ body {
   font-family: "Fraunces", Georgia, serif;
   font-style: italic;
   font-weight: 400;
-  font-size: 1.02rem;
+  font-size: 1rem;
   color: var(--tinta-media);
-  margin: 12px 0 0;
+  margin: 10px 0 0;
   max-width: 26ch;
 }
 
@@ -395,13 +427,14 @@ body {
 
 .sec-title {
   font-family: "Fraunces", Georgia, serif;
-  font-weight: 600;
-  font-variation-settings: "opsz" 110, "SOFT" 30;
-  font-size: clamp(2rem, 9.5vw, 2.6rem);
-  line-height: 1.02;
-  letter-spacing: -.012em;
+  font-weight: 700;
+  font-variation-settings: "opsz" 144, "SOFT" 20;
+  font-size: clamp(2.1rem, 10vw, 2.8rem);
+  line-height: .98;
+  letter-spacing: .005em;
+  text-transform: uppercase;
   margin: 0;
-  color: var(--tinta);
+  color: var(--acento);
 }
 
 .sec-sub {
@@ -417,12 +450,11 @@ body {
    ======================================================================== */
 .items { list-style: none; margin: 0; padding: 0; }
 
+/* Sin líneas separadoras: los productos flotan sobre la madera y lo que
+   los separa es el aire, no una regla. */
 .item {
-  padding: 16px 0;
-  border-bottom: 1px solid var(--linea);
+  padding: 13px 0;
 }
-
-.item:last-child { border-bottom: 0; }
 
 /* Con foto: el texto se agrupa y se centra contra la miniatura.
    Con grid no salía: la foto abarcaba las dos filas, cada una crecía a la
@@ -438,11 +470,8 @@ body {
   min-width: 0;             /* deja que el texto largo se ajuste */
 }
 
-/* Fila nombre ····· precio */
 .item-row {
-  display: flex;
-  align-items: baseline;
-  gap: 7px;
+  display: block;
 }
 
 /* Serif en itálica en vez de negrita de palo seco: es lo que separa una
@@ -458,29 +487,28 @@ body {
   color: var(--tinta);
 }
 
-.item-dots {
-  flex: 1;
-  border-bottom: 1px dotted var(--linea);
-  transform: translateY(-4px);
-  min-width: 12px;
-}
+/* Los puntitos guía son lenguaje de lista de precios, no de revista */
+.item-dots { display: none; }
 
+/* El precio va debajo del nombre, discreto. No compite con el producto. */
 .item-price {
+  display: block;
+  margin-top: 3px;
   font-family: "Fraunces", Georgia, serif;
   font-weight: 600;
-  font-variation-settings: "opsz" 24;
-  font-size: 1.04rem;
+  font-variation-settings: "opsz" 20;
+  font-size: .95rem;
   color: var(--acento);
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
 }
 
 .item-desc {
-  margin: 5px 0 0;
-  font-size: .875rem;
-  line-height: 1.45;
+  margin: 2px 0 0;
+  font-size: .8rem;
+  line-height: 1.4;
   color: var(--tinta-media);
-  max-width: 44ch;
+  max-width: 42ch;
 }
 
 /* La foto va recortada en círculo con fondo transparente (ver
@@ -491,10 +519,10 @@ body {
 .item-photo {
   flex: none;
   display: block;
-  width: 96px;
-  height: 96px;
+  width: 108px;
+  height: 108px;
   object-fit: cover;
-  filter: drop-shadow(0 5px 9px var(--sombra));
+  filter: drop-shadow(0 7px 13px var(--sombra-foto));
 }
 
 /* ---- Imagen de cabecera de sección ---- */
@@ -517,10 +545,22 @@ body {
 /* ---- Tabla compacta: bebidas y adicionales ----
    Ponerle foto a cada renglón satura la página y no ayuda: el cliente ya
    sabe cómo se ve un tinto. Densa, de dos columnas, se lee de un vistazo. */
-.items.compacto .item {
-  padding: 8px 0;
-  border-bottom: 1px dotted var(--linea);
+/* Panel sólido, como los bloques de bebidas de las cartas impresas:
+   separa visualmente "lo que se pide con foto" de "lo que se pide de lista". */
+.items.compacto {
+  background: var(--panel);
+  color: var(--panel-tinta);
+  border-radius: 12px;
+  padding: 16px 18px;
+  box-shadow: 0 8px 22px var(--sombra);
 }
+
+.items.compacto .item {
+  padding: 7px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, .13);
+}
+
+.items.compacto .item:last-child { border-bottom: 0; }
 
 .items.compacto .item-name {
   font-family: "Karla", system-ui, sans-serif;
@@ -529,15 +569,28 @@ body {
   font-size: .95rem;
 }
 
+.items.compacto .item-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.items.compacto .item-name { color: var(--panel-tinta); }
+
 .items.compacto .item-price {
-  font-size: .95rem;
+  display: inline;
+  margin: 0;
+  font-size: .92rem;
   font-variation-settings: "opsz" 14;
+  color: var(--panel-tinta);
+  font-weight: 700;
 }
 
 .items.compacto .item-desc {
-  font-size: .78rem;
-  margin-top: 1px;
-  color: var(--tinta-tenue);
+  font-size: .75rem;
+  margin-top: 0;
+  color: rgba(251, 243, 230, .62);
 }
 
 /* En pantallas con algo de ancho, la tabla pasa a dos columnas */
