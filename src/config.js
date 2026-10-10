@@ -87,6 +87,22 @@ export const SECCIONES_COMPACTAS = [
 /** Cuántos renglones caben en una página de tabla compacta. */
 export const MAX_COMPACTO = 13;
 
+/**
+ * Completar la carta con el catálogo local cuando al Sheet le falten
+ * secciones.
+ *
+ * El Sheet SIEMPRE manda sobre las secciones que tenga. Esto solo rellena
+ * las que todavía no existen allá, para que la maqueta se pueda presentar
+ * completa sin desconectar el Excel.
+ *
+ * Se resuelve solo: el día que el Sheet tenga la carta entera, el respaldo
+ * deja de aportar nada.
+ *
+ * Ponlo en false para que la carta muestre EXACTAMENTE lo que hay en el
+ * Sheet, ni un producto más.
+ */
+export const COMPLETAR_CON_RESPALDO = true;
+
 /* --- Identidad del negocio ---------------------------------------------
    Esto cambia muy de vez en cuando, así que vive en el código y no en el
    Sheet: menos cosas que se puedan romper en el día a día.
