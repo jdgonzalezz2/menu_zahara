@@ -148,11 +148,10 @@ body {
 
 .page.is-current { pointer-events: auto; }
 .page.flipped { transform: rotateY(-180deg); }
-/* OJO: --giro NO se pone acá. Lo escribe el JS en línea, igual que el
-   z-index. Mezclar las dos fuentes no funciona: cuando el valor pasa de
-   estar en línea (durante el arrastre) a venir de esta clase, la
-   transición de la propiedad personalizada no arranca y la sombra se
-   queda congelada a mitad de camino. */
+/* La luz del giro (.brillo) la pinta el JS en línea, no una clase.
+   Mezclar las dos fuentes no funciona: cuando el valor pasa de estar en
+   línea, durante el arrastre, a venir de una clase, la transición no
+   arranca y la sombra se queda congelada a mitad de camino. */
 /* El z-index de la hoja que gira lo pone el JS: escribe estilo inline y el
    inline le gana siempre a esta hoja de estilos. */
 
