@@ -7,7 +7,8 @@ Requisito (una sola vez):
 
 Uso:
     python scripts/preparar-foto.py  C:/ruta/a/la/foto.jpg  combo-1
-    python scripts/preparar-foto.py  foto.jpg  combo-1  --ancha   (3:2)
+    python scripts/preparar-foto.py  foto.jpg  combo-1  --ancha    (3:2)
+    python scripts/preparar-foto.py  foto.jpg  combo-1  --redonda  (recorte circular)
 
 El segundo argumento es el nombre que va a quedar (sin extensión) y es el
 mismo que se escribe en la columna "Foto" del Google Sheet.
@@ -18,11 +19,16 @@ Qué hace:
   - Guarda en WebP buscando la calidad más alta que quepa en 80 KB.
   - Quita los metadatos EXIF (ubicación GPS, modelo del celular, etc.),
     que no tienen por qué acabar publicados.
+
+Con --redonda recorta en círculo con fondo transparente. Como los platos son
+redondos, el fondo del mesón desaparece y el plato queda "flotando", que es
+el recurso que usan las cartas de revista. En la carta eso se combina con una
+sombra difusa que sigue el contorno.
 """
 
 import sys
 from pathlib import Path
-from PIL import Image, ImageOps
+from PIL import Image, ImageOps, ImageDraw
 
 RAIZ = Path(__file__).resolve().parent.parent
 DESTINO = RAIZ / "public" / "assets"
@@ -50,7 +56,26 @@ def recortar_centrado(img: Image.Image, proporcion: float) -> Image.Image:
     return img
 
 
-def preparar(origen: Path, nombre: str, ancha: bool = False) -> Path:
+def recorte_circular(img: Image.Image) -> Image.Image:
+    """Deja solo el círculo inscrito; el resto queda transparente.
+
+    La máscara se dibuja al cuádruple y luego se reduce, que es la forma
+    barata de conseguir un borde suave en vez de una escalera de píxeles.
+    """
+    lado = img.size[0]
+    escala = 4
+
+    mascara = Image.new("L", (lado * escala, lado * escala), 0)
+    ImageDraw.Draw(mascara).ellipse((0, 0, lado * escala - 1, lado * escala - 1), fill=255)
+    mascara = mascara.resize((lado, lado), Image.LANCZOS)
+
+    salida = img.convert("RGBA")
+    salida.putalpha(mascara)
+    return salida
+
+
+def preparar(origen: Path, nombre: str, ancha: bool = False,
+             redonda: bool = False) -> Path:
     if not origen.exists():
         raise SystemExit(f"No encuentro el archivo: {origen}")
 
@@ -65,12 +90,16 @@ def preparar(origen: Path, nombre: str, ancha: bool = False) -> Path:
     img = recortar_centrado(img, ancho / alto)
     img = img.resize((ancho, alto), Image.LANCZOS)
 
+    if redonda:
+        img = recorte_circular(img)
+
     DESTINO.mkdir(parents=True, exist_ok=True)
     salida = DESTINO / f"{nombre}.webp"
 
     # Baja la calidad por pasos hasta que entre en el presupuesto
     for calidad in CALIDADES:
-        img.save(salida, format="WEBP", quality=calidad, method=6)
+        # WebP guarda el canal alfa, así que el recorte circular se conserva
+        img.save(salida, format="WEBP", quality=calidad, method=6, exact=redonda)
         peso = salida.stat().st_size
         if peso <= PESO_MAXIMO:
             break
@@ -87,6 +116,7 @@ def preparar(origen: Path, nombre: str, ancha: bool = False) -> Path:
 if __name__ == "__main__":
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
     ancha = "--ancha" in sys.argv
+    redonda = "--redonda" in sys.argv
 
     if len(args) < 2:
         raise SystemExit(
@@ -94,4 +124,4 @@ if __name__ == "__main__":
             "Ej:  python scripts/preparar-foto.py fotos/combo1.jpg combo-1"
         )
 
-    preparar(Path(args[0]), args[1], ancha)
+    preparar(Path(args[0]), args[1], ancha, redonda)

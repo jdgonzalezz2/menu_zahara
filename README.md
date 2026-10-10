@@ -179,7 +179,16 @@ mejor que una captura de Maps, que ya viene comprimida dos veces.
    verticales y un recorte 3:2 les corta el plato. Si alguna necesita ser
    apaisada, `--ancha` la deja en 900×600.
 
-   En la carta se ve como una **miniatura de 84×84** al lado del nombre. Se
+   **Para las miniaturas de producto usa `--redonda`**: recorta en círculo
+   con fondo transparente. Como los platos son redondos, el mesón desaparece
+   y el plato queda flotando sobre el papel, que es el recurso de las cartas
+   de revista. La carta le pone una sombra que sigue el contorno real.
+
+   ```bash
+   python scripts/preparar-foto.py  foto.jpg  combo-7  --redonda
+   ```
+
+   En la carta se ve como una **miniatura de 96×96** al lado del nombre. Se
    eligió así y no a todo el ancho porque una foto grande por producto haría
    las páginas larguísimas, y la gracia del flipbook es pasar páginas, no
    hacer scroll.

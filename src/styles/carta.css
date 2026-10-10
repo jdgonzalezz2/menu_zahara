@@ -354,7 +354,7 @@ body {
 .items { list-style: none; margin: 0; padding: 0; }
 
 .item {
-  padding: 15px 0;
+  padding: 16px 0;
   border-bottom: 1px solid var(--linea);
 }
 
@@ -381,10 +381,16 @@ body {
   gap: 7px;
 }
 
+/* Serif en itálica en vez de negrita de palo seco: es lo que separa una
+   carta de revista de una lista de precios. */
 .item-name {
-  font-weight: 700;
-  font-size: 1.01rem;
-  line-height: 1.3;
+  font-family: "Fraunces", Georgia, serif;
+  font-style: italic;
+  font-weight: 600;
+  font-variation-settings: "opsz" 36, "SOFT" 40;
+  font-size: 1.12rem;
+  line-height: 1.25;
+  letter-spacing: -.005em;
   color: var(--tinta);
 }
 
@@ -413,15 +419,18 @@ body {
   max-width: 44ch;
 }
 
+/* La foto va recortada en círculo con fondo transparente (ver
+   scripts/preparar-foto.py --redonda). Por eso NO lleva caja ni esquinas
+   redondeadas: drop-shadow sigue el contorno real del plato, así que
+   parece recortada y puesta encima del papel, como en una revista.
+   box-shadow no sirve acá: dibujaría la sombra de un cuadrado. */
 .item-photo {
   flex: none;
   display: block;
-  width: 88px;
-  height: 88px;
+  width: 96px;
+  height: 96px;
   object-fit: cover;
-  border-radius: 12px;
-  background: var(--papel-2);
-  box-shadow: 0 3px 10px var(--sombra);
+  filter: drop-shadow(0 5px 9px var(--sombra));
 }
 
 /* ---- Etiquetas ---- */
@@ -444,8 +453,8 @@ body {
 /* Agotado: atenuado y sin precio */
 .item.agotado .item-name,
 .item.agotado .item-desc { color: var(--tinta-tenue); }
-.item.agotado .item-name { text-decoration: line-through; text-decoration-thickness: 1px; }
-.item.agotado .item-photo { opacity: .4; filter: saturate(.3); }
+.item.agotado .item-name { text-decoration: line-through; text-decoration-thickness: 1px; text-decoration-color: var(--tinta-tenue); }
+.item.agotado .item-photo { opacity: .4; filter: saturate(.25) drop-shadow(0 3px 6px var(--sombra)); }
 
 /* ---- Pie de página de carta ---- */
 .page-note {
