@@ -119,6 +119,7 @@ const configEnVivo = SHEET_ID
       data-titulo={nombre}
     >
       <div class="face front">
+        <div class="face-scroll">
         {i === 0 && (
           <Portada
             negocio={NEGOCIO}
@@ -132,10 +133,14 @@ const configEnVivo = SHEET_ID
           <Seccion seccion={paginasDeCarta[i - 1]} />
         )}
         {i === total - 1 && <Contraportada negocio={NEGOCIO} />}
+        </div>
+        <div class="brillo" aria-hidden="true"></div>
       </div>
 
       {/* Cara trasera: papel en blanco, es lo que se ve a mitad del giro */}
-      <div class="face back"></div>
+      <div class="face back">
+        <div class="brillo" aria-hidden="true"></div>
+      </div>
     </article>
   ))}
 </Carta>

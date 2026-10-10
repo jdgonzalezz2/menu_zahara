@@ -140,8 +140,19 @@ body {
   pointer-events: none;
 }
 
+/* Mientras el dedo arrastra, nada de transición: la hoja tiene que ir
+   pegada al dedo, no perseguirlo. */
+.page.arrastrando {
+  transition: none;
+}
+
 .page.is-current { pointer-events: auto; }
 .page.flipped { transform: rotateY(-180deg); }
+/* OJO: --giro NO se pone acá. Lo escribe el JS en línea, igual que el
+   z-index. Mezclar las dos fuentes no funciona: cuando el valor pasa de
+   estar en línea (durante el arrastre) a venir de esta clase, la
+   transición de la propiedad personalizada no arranca y la sombra se
+   queda congelada a mitad de camino. */
 /* El z-index de la hoja que gira lo pone el JS: escribe estilo inline y el
    inline le gana siempre a esta hoja de estilos. */
 
@@ -151,6 +162,14 @@ body {
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   background: var(--papel);
+  overflow: hidden;              /* el scroll lo hace .face-scroll */
+}
+
+/* El contenido va en su propio contenedor con scroll, para que el brillo
+   y el grano se queden quietos en vez de irse con el texto. */
+.face-scroll {
+  position: absolute;
+  inset: 0;
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
@@ -168,7 +187,7 @@ body {
   width: 32px;
   background: linear-gradient(to right, var(--lomo), transparent);
   pointer-events: none;
-  z-index: 2;
+  z-index: 4;
 }
 
 /* Grano de papel. Es un SVG de ruido en línea (unos 250 bytes, sin
@@ -179,13 +198,42 @@ body {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  z-index: 1;
+  z-index: 2;
   opacity: .055;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 @media (prefers-color-scheme: dark) {
   .face::after { opacity: .085; }
+}
+
+/* Luz sobre la hoja que gira.
+   Al inclinarse, el borde lejano se va de la luz: eso es lo que hace que
+   el papel se sienta papel y no una diapositiva cambiando. */
+.brillo {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+  transition: opacity var(--flip) var(--curva);
+}
+
+/* Con el dedo encima, la sombra va pegada al gesto, sin suavizado */
+.page.arrastrando .brillo { transition: none; }
+
+/* La OPACIDAD de estas dos capas la escribe el JS en línea, igual que el
+   z-index y por el mismo motivo: una sola fuente. Se intentó derivarla de
+   una propiedad personalizada con calc() y no es fiable — la transición no
+   arranca cuando el valor venía de un estilo en línea. */
+.face.front .brillo {
+  background: linear-gradient(100deg, transparent 20%, rgba(0, 0, 0, .55) 100%);
+  opacity: 0;
+}
+
+/* El revés empieza en sombra y se va aclarando conforme encara al lector */
+.face.back .brillo {
+  background: linear-gradient(260deg, transparent 10%, rgba(0, 0, 0, .5) 100%);
+  opacity: .95;
 }
 
 .face.front { transform: rotateY(0deg); }
@@ -368,9 +416,6 @@ body {
 /* ===========================================================================
    6. PRODUCTOS
    ======================================================================== */
-/* El contenido va sobre el grano (.face::after está en z-index 1) */
-.cover, .menu-page, .back-page { position: relative; z-index: 2; }
-
 .items { list-style: none; margin: 0; padding: 0; }
 
 .item {
@@ -695,12 +740,38 @@ body {
 }
 
 /* ===========================================================================
+   8b. ENTRADA DEL CONTENIDO
+   Los renglones entran escalonados cuando la página llega. Es lo que hace
+   que la carta se sienta viva en vez de aparecer de golpe.
+   ======================================================================== */
+.page.is-current .item,
+.page.is-current .sec-head,
+.page.is-current .hero,
+.page.is-current .sec-foto {
+  animation: entrar .42s var(--curva) both;
+  animation-delay: calc(var(--i, 0) * 32ms + 90ms);
+}
+
+.page.is-current .sec-head { animation-delay: 40ms; }
+.page.is-current .hero,
+.page.is-current .sec-foto { animation-delay: 160ms; }
+
+@keyframes entrar {
+  from { opacity: 0; transform: translateY(9px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ===========================================================================
    9. MOVIMIENTO REDUCIDO
    ======================================================================== */
 @media (prefers-reduced-motion: reduce) {
   :root { --flip: .001s; }
   .page { transition-duration: .001s; }
   .cover-pie .flecha { animation: none; }
+  .page.is-current .item,
+  .page.is-current .sec-head,
+  .page.is-current .hero,
+  .page.is-current .sec-foto { animation: none; }
   .dot::before, .arrow-btn { transition: none; }
 }
 

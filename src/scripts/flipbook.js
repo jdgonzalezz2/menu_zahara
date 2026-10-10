@@ -33,6 +33,17 @@ if (total) {
   let actual = 0;
   let animando = false;
 
+  /**
+   * Pinta la luz sobre una hoja según cuánto lleve girada (0 a 1).
+   * Al inclinarse, el frente se va de la luz y el revés entra en ella.
+   */
+  function pintarLuz(hoja, giro) {
+    const frente = hoja.querySelector(".face.front .brillo");
+    const reverso = hoja.querySelector(".face.back .brillo");
+    if (frente) frente.style.opacity = String(giro * 0.9);
+    if (reverso) reverso.style.opacity = String((1 - giro) * 0.95);
+  }
+
   /** Aplica el estado visual de todas las páginas y controles. */
   function pintar() {
     paginas.forEach((hoja, i) => {
@@ -51,6 +62,11 @@ if (total) {
         : pasada
           ? i
           : 2 * total - i;
+
+      // La hoja que está bajo el dedo maneja su propia luz
+      if (!hoja.classList.contains("arrastrando")) {
+        pintarLuz(hoja, pasada ? 1 : 0);
+      }
 
       hoja.setAttribute("aria-hidden", i === actual ? "false" : "true");
     });
@@ -118,42 +134,131 @@ if (total) {
     ev.preventDefault();
   });
 
-  // --- Swipe ---
-  // Solo cuenta como "pasar página" si el gesto es claramente horizontal;
-  // así el scroll vertical dentro de una página sigue funcionando.
-  let x0 = 0;
-  let y0 = 0;
-  let rastreando = false;
+  /* ---- Arrastre: la hoja va pegada al dedo ----------------------------
+     Esto es lo que separa "cambia de página" de "estoy pasando una hoja".
+     Mientras el dedo se mueve no hay transición: se escribe el ángulo
+     directo. Al soltar, se decide si completa el giro o se devuelve, y ahí
+     sí entra la transición.
+     -------------------------------------------------------------------- */
 
-  stage.addEventListener(
-    "touchstart",
-    (ev) => {
-      if (ev.touches.length !== 1) { rastreando = false; return; }
-      x0 = ev.touches[0].clientX;
-      y0 = ev.touches[0].clientY;
-      rastreando = true;
-    },
-    { passive: true }
-  );
+  const UMBRAL_DIRECCION = 10;   // px antes de decidir si el gesto es horizontal
+  const UMBRAL_COMPLETAR = 0.3;  // fracción de página a partir de la cual se pasa
+  const VELOCIDAD_MINIMA = 0.45; // px/ms para que cuente como flick
+  const FLICK_MINIMO = 0.12;     // ...pero un flick también tiene que recorrer algo
 
-  stage.addEventListener(
-    "touchend",
-    (ev) => {
-      if (!rastreando) return;
-      rastreando = false;
+  let gesto = null;
 
-      const t = ev.changedTouches[0];
-      const dx = t.clientX - x0;
-      const dy = t.clientY - y0;
+  function anchoLibro() {
+    return document.getElementById("book").offsetWidth || window.innerWidth;
+  }
 
-      if (Math.abs(dx) < 45) return;                   // muy corto
-      if (Math.abs(dx) < Math.abs(dy) * 1.2) return;   // fue más vertical
+  /** Pinta la hoja a mitad de giro, sin transición. */
+  function aplicarGiro(hoja, giro) {
+    hoja.style.transform = `rotateY(${-180 * giro}deg)`;
+    pintarLuz(hoja, giro);
+  }
 
-      if (dx < 0) siguiente();
-      else anterior();
-    },
-    { passive: true }
-  );
+  stage.addEventListener("touchstart", (ev) => {
+    if (ev.touches.length !== 1 || animando) { gesto = null; return; }
+    gesto = {
+      x0: ev.touches[0].clientX,
+      y0: ev.touches[0].clientY,
+      t0: performance.now(),
+      decidido: false,
+      hoja: null,
+      haciaAdelante: true,
+      giro: 0,
+    };
+  }, { passive: true });
+
+  stage.addEventListener("touchmove", (ev) => {
+    if (!gesto || ev.touches.length !== 1) return;
+
+    const dx = ev.touches[0].clientX - gesto.x0;
+    const dy = ev.touches[0].clientY - gesto.y0;
+
+    if (!gesto.decidido) {
+      // Todavía puede ser un scroll vertical: no secuestramos el gesto
+      if (Math.abs(dx) < UMBRAL_DIRECCION) return;
+      if (Math.abs(dx) < Math.abs(dy) * 1.2) { gesto = null; return; }
+
+      gesto.haciaAdelante = dx < 0;
+
+      // Hacia adelante gira la página actual; hacia atrás, la anterior
+      const indice = gesto.haciaAdelante ? actual : actual - 1;
+      if (indice < 0 || indice >= total) { gesto = null; return; }
+
+      gesto.hoja = paginas[indice];
+      gesto.decidido = true;
+
+      gesto.hoja.classList.add("arrastrando", "lift");
+      gesto.hoja.style.zIndex = 900;
+    }
+
+    // De acá en adelante el gesto es nuestro: que no haga scroll
+    if (ev.cancelable) ev.preventDefault();
+
+    const avance = Math.abs(dx) / anchoLibro();
+    const limitado = Math.max(0, Math.min(1, avance));
+
+    gesto.giro = gesto.haciaAdelante ? limitado : 1 - limitado;
+    aplicarGiro(gesto.hoja, gesto.giro);
+  }, { passive: false });
+
+  function soltar(ev) {
+    if (!gesto) return;
+    if (!gesto.decidido) { gesto = null; return; }
+
+    const g = gesto;
+    gesto = null;
+
+    const t = ev.changedTouches ? ev.changedTouches[0] : null;
+    const dx = t ? t.clientX - g.x0 : 0;
+    const ms = Math.max(1, performance.now() - g.t0);
+    const velocidad = Math.abs(dx) / ms;
+
+    const avance = Math.abs(dx) / anchoLibro();
+
+    // Un recorrido largo pasa página. Un flick rápido también, pero solo si
+    // además recorrió algo: sin eso, un temblor de 30 px en un instante da
+    // una velocidad altísima y pasa página sin que el usuario lo pidiera.
+    const completa =
+      avance > UMBRAL_COMPLETAR ||
+      (velocidad > VELOCIDAD_MINIMA && avance > FLICK_MINIMO);
+
+    // Se devuelve el control al CSS: al quitar el transform en línea, la
+    // transición anima desde donde quedó la hoja.
+    // Se devuelve el control al CSS para el transform; --giro lo fija
+    // pintar() justo abajo, y la transición corre desde donde quedó.
+    g.hoja.classList.remove("arrastrando");
+    g.hoja.style.transform = "";
+
+    if (completa) {
+      actual = g.haciaAdelante ? actual + 1 : actual - 1;
+      actual = Math.max(0, Math.min(total - 1, actual));
+    }
+
+    animando = true;
+    pintar();
+
+    let listo = false;
+    const fin = () => {
+      if (listo) return;
+      listo = true;
+      g.hoja.classList.remove("lift");
+      animando = false;
+      g.hoja.removeEventListener("transitionend", fin);
+      pintar();
+    };
+    g.hoja.addEventListener("transitionend", fin);
+    setTimeout(fin, 750);
+  }
+
+  stage.addEventListener("touchend", soltar, { passive: true });
+  stage.addEventListener("touchcancel", () => { 
+    if (gesto && gesto.decidido) soltar({ changedTouches: null });
+    gesto = null;
+  }, { passive: true });
 
   pintar();
 }
